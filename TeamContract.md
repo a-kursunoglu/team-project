@@ -74,3 +74,5 @@ Team Member Signatures:
 Ates Kursunoglu
 
 Yeyun Chang
+
+Jaden Al-Aidroos
