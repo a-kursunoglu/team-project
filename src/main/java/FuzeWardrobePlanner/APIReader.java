@@ -16,7 +16,6 @@ import org.json.JSONObject;
  */
 public class APIReader {
     /**
-     * Fetch the list of sub breeds for the given breed.
      * @param longitude is a double representing the geographical longitude
      * @param latitude is a double representing the geographical latitude
      * @param startDate is a string for the starting forecast day in "YYYY-MM-DD"
