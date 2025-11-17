@@ -1,4 +1,4 @@
-package FuzeWardrobePlanner;
+package FuzeWardrobePlanner.Entity.Clothing;
 
 import java.util.Map;
 

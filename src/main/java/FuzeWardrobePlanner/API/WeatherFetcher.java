@@ -1,9 +1,8 @@
-package FuzeWardrobePlanner;
+package FuzeWardrobePlanner.API;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import FuzeWardrobePlanner.Entity.Weather.WeatherDay;
+
 import java.io.IOException;
-import java.util.*;
 
 public class WeatherFetcher {
     private boolean isDataLoaded = false;

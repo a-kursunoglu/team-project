@@ -1,4 +1,4 @@
-package FuzeWardrobePlanner;
+package FuzeWardrobePlanner.UserCases;
 
 import org.json.JSONObject;
 

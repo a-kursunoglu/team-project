@@ -1,4 +1,4 @@
-package FuzeWardrobePlanner;
+package FuzeWardrobePlanner.Entity.Weather;
 
 import java.util.LinkedList;
 import java.util.Queue;

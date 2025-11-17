@@ -1,4 +1,4 @@
-package FuzeWardrobePlanner;
+package FuzeWardrobePlanner.API;
 
 import java.net.URI;
 import java.net.http.HttpClient;
