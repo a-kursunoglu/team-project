@@ -1,6 +1,9 @@
 package FuzeWardrobePlanner.API;
 
 import FuzeWardrobePlanner.Entity.Weather.WeatherDay;
+import FuzeWardrobePlanner.API.APIReader;
+import java.time.LocalDate;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -10,16 +13,17 @@ public class WeatherFetcher {
     private double longitude;
     private double latitude;
     private String startDate;
+    private JSONObject weatherData;
 
 
-    public WeatherFetcher(String startDate) {
+    public WeatherFetcher() {
         // to construct later
         // 7 forecast days by default
         this.forecastDays = 7;
         // Default location of Toronto (Drake's home)
         this.longitude = -79.38;
         this.latitude = 43.65;
-        this.startDate = startDate;
+        this.startDate = LocalDate.now().toString();
     }
 
     public WeatherFetcher(String startDate, int forecastDays) {
@@ -37,10 +41,22 @@ public class WeatherFetcher {
     }
 
 
-    public void loadWeeklyForecast() throws IOException, InterruptedException {
+    public void loadWeeklyForecast() {
+
+
         // here to handle JSON Object from APIReader
         // Jaden to do but if someone else would like to that would be great, I
         // wrote all the return statements in the APIReader documentation.
+        try{
+            APIReader apiReader = new APIReader();
+            this.weatherData = apiReader.readAPI(this.longitude, this.latitude, this.startDate, this.forecastDays);
+            this.isDataLoaded = true;
+        }
+        catch (Exception e){
+            this.isDataLoaded = false;
+            this.weatherData = null;
+        }
+
     }
 
 
