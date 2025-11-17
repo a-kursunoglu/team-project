@@ -2,11 +2,11 @@ package FuzeWardrobePlanner;
 
 public class WeatherDay {
 
-    private String weather;      // 天气描述（如 Sunny、Rainy）
-    private int temperature;     // 温度
-    private Outfit outfit;       // 当天推荐的 Outfit
-    private String location;     // 地点
-    private String date;         // 日期（string 格式即可）
+    private String weather;
+    private int temperature;
+    private Outfit outfit;
+    private String location;
+    private String date;
 
     public WeatherDay(String weather, int temperature, Outfit outfit, String location, String date) {
         this.weather = weather;
