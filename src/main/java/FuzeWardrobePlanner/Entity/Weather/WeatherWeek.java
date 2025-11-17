@@ -1,4 +1,4 @@
-package FuzeWardrobePlanner;
+package FuzeWardrobePlanner.Entity.Weather;
 
 public class WeatherWeek {
     // This class should be pretty short, just load up a new WeatherFetcher, use the

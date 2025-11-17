@@ -1,4 +1,6 @@
-package FuzeWardrobePlanner;
+package FuzeWardrobePlanner.Entity.Weather;
+
+import FuzeWardrobePlanner.Entity.Clothing.Outfit;
 
 public class WeatherDay {
 
