@@ -1,4 +1,4 @@
-package FuzeWardrobePlanner;
+package FuzeWardrobePlanner.Entity.Clothing;
 
 public class ClothingArticle {
     private String name;

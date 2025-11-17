@@ -1,7 +1,4 @@
-package FuzeWardrobePlanner;
-
-import java.io.IOException;
-import java.text.ParseException;
+package FuzeWardrobePlanner.App;
 
 public class Main {
     public static void main(String[] args) {
