@@ -74,7 +74,6 @@ public class WeatherFetcher {
     }
 
     public JSONArray getForecastDates() {
-        System.out.println(weatherData.toString());
         return weatherData.getJSONObject("daily").getJSONArray("time");
     }
 

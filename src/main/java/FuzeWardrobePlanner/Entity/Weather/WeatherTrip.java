@@ -86,7 +86,6 @@ public class WeatherTrip extends WeatherDays{
      * Same warning as above
      */
     public String toString() {
-        System.out.println(this.days.toString());
         String result = "";
         Iterator<WeatherDay> iterator = days.iterator();
         while(iterator.hasNext()){
