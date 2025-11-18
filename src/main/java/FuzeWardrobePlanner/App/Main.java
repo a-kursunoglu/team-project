@@ -15,7 +15,7 @@ public class Main {
         Wardrobe wardrobe = new Wardrobe();
 
         wardrobe.addItem(new ClothingArticle(
-                "Hoodie", 2, false, new Photo("placeholder.jpg")   // put your real photo later
+                "Hoodie", 2, false, new Photo("placeholder.jpg")   // put real photo later
         ));
         wardrobe.addItem(new ClothingArticle(
                 "Jacket", 3, true, new Photo("placeholder.jpg")
