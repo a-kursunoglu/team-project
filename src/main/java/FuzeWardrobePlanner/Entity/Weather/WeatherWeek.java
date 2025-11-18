@@ -1,76 +1,64 @@
 package FuzeWardrobePlanner.Entity.Weather;
 
-import FuzeWardrobePlanner.API.WeatherFetcher;
-import FuzeWardrobePlanner.Entity.Weather.WeatherDay;
-import org.json.JSONArray;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
+public class WeatherWeek {
+    private List<WeatherDay> weekDays;
+    private String defaultLocation;
 
-/**
- * Extends the abstract class of WeatherDays, this class organizes the WeatherDay-s
- * in a managable Queue, it also handles calls to WeatherFetcher so we don't make an
- * API call for each individual day.
- */
-public class WeatherWeek extends WeatherDays{
-    private Queue<WeatherDay> days;
-    private WeatherFetcher weatherFetcher;
-    private Iterator<WeatherDay> iterator;
-
-    /**
-     * Does not have any params because it uses default start date of today
-     * and the default location of Toronto
-     */
     public WeatherWeek() {
-        this.weatherFetcher = new WeatherFetcher();
-        this.days = constructWeatherQueue();
+        this.weekDays = new ArrayList<>();
+        this.defaultLocation = "";
     }
 
-    /**
-     * Constructs the actual Queue
-     * @return a Queue of WeatherDay-s
-     */
-    private Queue<WeatherDay> constructWeatherQueue(){
-        JSONArray dates = weatherFetcher.getForecastDates();
-        Queue<WeatherDay> weatherQueue = new LinkedList<>();
-        for (int i = 0; i < dates.length() - 1; i++){
-            weatherQueue.add(weatherFetcher.getWeatherByDate(dates.getString(i)));
-        }
-        return weatherQueue;
+    public WeatherWeek(String defaultLocation) {
+        this.weekDays = new ArrayList<>();
+        this.defaultLocation = defaultLocation;
     }
-    @Override
-    /**
-     * Make sure WE are careful about using iterator calls so we're not starting loops halfway
-     */
+
+    public WeatherWeek(List<WeatherDay> weekDays, String defaultLocation) {
+        this.weekDays = weekDays != null ? weekDays : new ArrayList<>();
+        this.defaultLocation = defaultLocation;
+    }
+
+    public List<WeatherDay> getWeekDays() {
+        return weekDays;
+    }
+
+    public void setWeekDays(List<WeatherDay> weekDays) {
+        this.weekDays = weekDays != null ? weekDays : new ArrayList<>();
+    }
+
+    public String getDefaultLocation() {
+        return defaultLocation;
+    }
+
+    public void setDefaultLocation(String defaultLocation) {
+        this.defaultLocation = defaultLocation;
+    }
+
+    public void addWeatherDay(WeatherDay weatherDay) {
+        if (weatherDay != null) {
+            weekDays.add(weatherDay);
+        }
+    }
+
     public WeatherDay getWeatherDay(int index) {
-        Iterator<WeatherDay> iterator = days.iterator();
-        int i = 0;
-        WeatherDay weather = null;
-        while(iterator.hasNext() && i <= index){
-            weather = iterator.next();
-            i ++;
+        if (index < 0 || index >= weekDays.size()) {
+            return null;
         }
-        return weather;
+        return weekDays.get(index);
     }
 
-    @Override
-    JSONArray getDays() {
-        return this.weatherFetcher.getForecastDates();
+    public WeatherDay removeWeatherDay(int index) {
+        if (index < 0 || index >= weekDays.size()) {
+            return null;
+        }
+        return weekDays.remove(index);
     }
 
-    /**
-     * Highlight above comment^^^^
-     * @return a string representation
-     */
-    @Override
-    public String toString() {
-        String result = "";
-        Iterator<WeatherDay> iterator = days.iterator();
-        while(iterator.hasNext()){
-            WeatherDay weather = iterator.next();
-            result = result + "\n" + weather.toString();
-        }
-        return result;
+    public int size() {
+        return weekDays.size();
     }
 }
