@@ -2,8 +2,10 @@ package FuzeWardrobePlanner.App.Gui;
 
 import FuzeWardrobePlanner.Entity.Clothing.ClothingArticle;
 import FuzeWardrobePlanner.Entity.Clothing.Outfit;
+import FuzeWardrobePlanner.Entity.Clothing.WardrobeRepository;
 import FuzeWardrobePlanner.Entity.Weather.WeatherDay;
 import FuzeWardrobePlanner.Entity.Weather.WeatherWeek;
+import FuzeWardrobePlanner.UserCases.UploadClothing.*;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -19,12 +21,16 @@ public class MainPage extends JFrame {
     private JComboBox<String> locationDropdown;
     private JLabel currentLocationLabel;
     private JLabel temperatureLabel;
+    private final WardrobeRepository wardrobeRepository;
 
     // Right side outfit display
     private JPanel outfitPanel;
 
     public MainPage() {
         super("Fuze's Weather Wardrobe Planner");
+
+        this.wardrobeRepository = new InMemoryWardrobeRepository();  // <-- ADD THIS
+
         initUi();
     }
 
@@ -65,12 +71,45 @@ public class MainPage extends JFrame {
         panel.add(temperatureLabel);
 
         panel.add(Box.createVerticalStrut(20));
-        panel.add(makeButton("Add Trip"));
-        panel.add(makeButton("Add Clothing Item"));
-        panel.add(makeButton("View Wardrobe"));
-        panel.add(makeButton("Plan for the Week"));
+        JButton addTripButton = makeButton("Add Trip");
+        JButton addClothingButton = makeButton("Add Clothing Item");
+        JButton viewWardrobeButton = makeButton("View Wardrobe");
+        JButton planWeekButton = makeButton("Plan for the Week");
+
+// MAKE THIS BUTTON OPEN THE UPLOAD WINDOW
+        addClothingButton.addActionListener(e -> openUploadClothingWindow());
+
+        panel.add(addTripButton);
+        panel.add(addClothingButton);
+        panel.add(viewWardrobeButton);
+        panel.add(planWeekButton);
 
         return panel;
+    }
+
+    private void openUploadClothingWindow() {
+        UploadClothingPresenter presenter = new UploadClothingPresenter(null);
+
+        // 2. Build interactor with shared repo
+        UploadClothingInputBoundary interactor =
+                new UploadClothingInteractor(wardrobeRepository, presenter);
+
+        // 3. Controller
+        UploadClothingController controller =
+                new UploadClothingController(interactor);
+
+        // 4. Swing UI panel (implements UploadClothingView)
+        UploadClothingPanel uploadPanel = new UploadClothingPanel(controller);
+
+        // 5. Now connect presenter to UI
+        presenter.setView(uploadPanel);
+
+        // 6. Show in a popup dialog
+        JDialog dialog = new JDialog(this, "Add Clothing Item", true);
+        dialog.setContentPane(uploadPanel);
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
     }
 
     private JPanel buildRightPanel() {
