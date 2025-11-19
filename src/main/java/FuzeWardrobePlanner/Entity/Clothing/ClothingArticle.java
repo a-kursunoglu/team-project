@@ -35,8 +35,4 @@ public class ClothingArticle {
     public Photo getImage() {
         return image;
     }
-
-    public String getCategory() {
-        return category;
-    }
 }
