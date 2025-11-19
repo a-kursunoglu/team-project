@@ -2,15 +2,25 @@ package FuzeWardrobePlanner.App.Gui;
 
 import FuzeWardrobePlanner.Entity.Clothing.ClothingArticle;
 import FuzeWardrobePlanner.Entity.Clothing.Outfit;
+import FuzeWardrobePlanner.Entity.Clothing.JsonWardrobeRepository;
 import FuzeWardrobePlanner.Entity.Clothing.WardrobeRepository;
 import FuzeWardrobePlanner.Entity.Weather.WeatherDay;
 import FuzeWardrobePlanner.Entity.Weather.WeatherWeek;
+import FuzeWardrobePlanner.UserCases.OutfitCreator;
 import FuzeWardrobePlanner.UserCases.UploadClothing.*;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Main landing page UI mock aligned to provided wireframe.
@@ -18,10 +28,12 @@ import java.util.Map;
 public class MainPage extends JFrame {
 
     // Left side components
-    private JComboBox<String> locationDropdown;
+    private JComboBox<String>   locationDropdown;
     private JLabel currentLocationLabel;
     private JLabel temperatureLabel;
     private final WardrobeRepository wardrobeRepository;
+    private WeatherWeek currentWeek;
+    private final OutfitCreator outfitCreator = new OutfitCreator();
 
     // Right side outfit display
     private JPanel outfitPanel;
@@ -29,7 +41,10 @@ public class MainPage extends JFrame {
     public MainPage() {
         super("Fuze's Weather Wardrobe Planner");
 
-        this.wardrobeRepository = new InMemoryWardrobeRepository();  // <-- ADD THIS
+        String userHome = System.getProperty("user.home");
+        String wardrobePath = Paths.get(userHome, ".fuzewardrobe", "wardrobe.json").toString();
+        this.wardrobeRepository = new JsonWardrobeRepository(wardrobePath);
+        this.currentWeek = null;
 
         initUi();
     }
@@ -56,7 +71,9 @@ public class MainPage extends JFrame {
 
         panel.add(label("Location:"));
         // TODO: populate with real cities list; placeholder options for now
-        locationDropdown = new JComboBox<>(new String[]{"(select city)", "Toronto", "New York", "Vancouver"});
+        String defaultLoc = currentWeek != null ? safe(currentWeek.getDefaultLocation()) : "Toronto Canada";
+        locationDropdown = new JComboBox<>(new String[]{defaultLoc, "(select city)", "Toronto Canada", "New York", "Vancouver"});
+        locationDropdown.setSelectedItem(defaultLoc);
         locationDropdown.setMaximumSize(new Dimension(250, 32));
         panel.add(locationDropdown);
 
@@ -75,14 +92,20 @@ public class MainPage extends JFrame {
         JButton addClothingButton = makeButton("Add Clothing Item");
         JButton viewWardrobeButton = makeButton("View Wardrobe");
         JButton planWeekButton = makeButton("Plan for the Week");
+        JButton refreshButton = makeButton("Refresh Outfit");
 
 // MAKE THIS BUTTON OPEN THE UPLOAD WINDOW
         addClothingButton.addActionListener(e -> openUploadClothingWindow());
+        addTripButton.addActionListener(e -> openTripPlanner());
+        viewWardrobeButton.addActionListener(e -> openWardrobeWindow());
+        planWeekButton.addActionListener(e -> openWeeklyPlanner());
+        refreshButton.addActionListener(e -> refreshOutfits());
 
         panel.add(addTripButton);
         panel.add(addClothingButton);
         panel.add(viewWardrobeButton);
         panel.add(planWeekButton);
+        panel.add(refreshButton);
 
         return panel;
     }
@@ -131,6 +154,10 @@ public class MainPage extends JFrame {
      * Populate UI with WeatherWeek data (defaults to day 0 for "today").
      */
     public void loadFromWeatherWeek(WeatherWeek week) {
+        this.currentWeek = week;
+        if (this.currentWeek != null) {
+            generateOutfitsForWeek(this.currentWeek);
+        }
         WeatherDay today = week != null ? week.getWeatherDay(0) : null;
         String loc = week != null ? safe(week.getDefaultLocation()) : "Unknown";
         currentLocationLabel.setText(loc);
@@ -225,12 +252,151 @@ public class MainPage extends JFrame {
         return value == null ? "-" : value;
     }
 
+    private void refreshOutfits() {
+        if (currentWeek == null) {
+            currentWeek = new WeatherWeek();
+        }
+        generateOutfitsForWeek(currentWeek);
+        loadFromWeatherWeek(currentWeek);
+    }
+
+    private void generateOutfitsForWeek(WeatherWeek week) {
+        Map<String, List<ClothingArticle>> wardrobeMap = buildWardrobeMap(wardrobeRepository.getAll());
+        if (wardrobeMap.isEmpty()) {
+            return;
+        }
+        Set<String> prevNames = new HashSet<>();
+        for (int i = 0; i < 7; i++) {
+            WeatherDay day = week.getWeatherDay(i);
+            if (day == null) continue;
+            Outfit outfit = generateOutfitWithNoRepeat(day, wardrobeMap, prevNames);
+            day.setOutfit(outfit);
+            prevNames = extractNames(outfit);
+        }
+    }
+
+    private Outfit generateOutfitWithNoRepeat(WeatherDay day,
+                                              Map<String, List<ClothingArticle>> wardrobeMap,
+                                              Set<String> previousNames) {
+        // Try to ensure at least top or bottom differs from previous day.
+        Outfit first = outfitCreator.createOutfitForDay(day, shuffledCopy(wardrobeMap), false);
+        if (first == null) return null;
+        if (!isSameTopOrBottom(first, previousNames)) {
+            return first;
+        }
+
+        // Try a few more shuffled attempts to find a different top/bottom.
+        for (int attempt = 0; attempt < 4; attempt++) {
+            Outfit candidate = outfitCreator.createOutfitForDay(day, shuffledCopy(wardrobeMap), false);
+            if (candidate != null && !isSameTopOrBottom(candidate, previousNames)) {
+                return candidate;
+            }
+        }
+
+        // Last attempt: remove previous top/bottom if possible
+        Map<String, List<ClothingArticle>> filtered = new HashMap<>();
+        for (Map.Entry<String, List<ClothingArticle>> entry : wardrobeMap.entrySet()) {
+            List<ClothingArticle> list = new ArrayList<>();
+            for (ClothingArticle item : entry.getValue()) {
+                if (item != null && (previousNames == null || !previousNames.contains(item.getName()))) {
+                    list.add(item);
+                }
+            }
+            filtered.put(entry.getKey(), list);
+        }
+        Outfit lastTry = outfitCreator.createOutfitForDay(day, filtered, false);
+        return lastTry != null ? lastTry : first;
+    }
+
+
+    private Map<String, List<ClothingArticle>> shuffledCopy(Map<String, List<ClothingArticle>> original) {
+        Map<String, List<ClothingArticle>> copy = new HashMap<>();
+        for (Map.Entry<String, List<ClothingArticle>> entry : original.entrySet()) {
+            List<ClothingArticle> list = new ArrayList<>(entry.getValue());
+            Collections.shuffle(list);
+            copy.put(entry.getKey(), list);
+        }
+        return copy;
+    }
+
+    private boolean isSameTopOrBottom(Outfit outfit, Set<String> previousNames) {
+        if (outfit == null || previousNames == null) return false;
+        Map<String, ClothingArticle> items = outfit.getItems();
+        if (items == null) return false;
+        ClothingArticle top = items.get("top");
+        ClothingArticle bottom = items.get("bottom");
+        boolean sameTop = top != null && top.getName() != null && previousNames.contains(top.getName());
+        boolean sameBottom = bottom != null && bottom.getName() != null && previousNames.contains(bottom.getName());
+        return sameTop && sameBottom;
+    }
+
+    private Set<String> extractNames(Outfit outfit) {
+        Set<String> names = new HashSet<>();
+        if (outfit == null || outfit.getItems() == null) return names;
+        for (ClothingArticle item : outfit.getItems().values()) {
+            if (item != null && item.getName() != null) {
+                names.add(item.getName());
+            }
+        }
+        return names;
+    }
+
+    private Map<String, List<ClothingArticle>> buildWardrobeMap(List<ClothingArticle> items) {
+        Map<String, List<ClothingArticle>> map = new HashMap<>();
+        map.put("top", new ArrayList<>());
+        map.put("bottom", new ArrayList<>());
+        map.put("outer", new ArrayList<>());
+        map.put("accessory", new ArrayList<>());
+
+        for (ClothingArticle item : items) {
+            if (item == null || item.getCategory() == null) continue;
+            String cat = item.getCategory().toLowerCase();
+            if (cat.contains("top")) {
+                map.get("top").add(item);
+            } else if (cat.contains("bottom")) {
+                map.get("bottom").add(item);
+            } else if (cat.contains("outer")) {
+                map.get("outer").add(item);
+            } else if (cat.contains("access")) {
+                map.get("accessory").add(item);
+            }
+        }
+        return map;
+    }
+
+    private void openTripPlanner() {
+        SwingUtilities.invokeLater(() -> {
+            TripPlanner planner = new TripPlanner(this::loadFromWeatherWeek);
+            planner.setVisible(true);
+        });
+    }
+
+    private void openWardrobeWindow() {
+        WardrobeGUI gui = new WardrobeGUI(wardrobeRepository);
+        gui.show();
+    }
+
+    private void openWeeklyPlanner() {
+        WeeklyPlanner planner = new WeeklyPlanner();
+        if (currentWeek == null) {
+            currentWeek = new WeatherWeek();
+        }
+        generateOutfitsForWeek(currentWeek);
+        planner.setWeatherWeek(currentWeek);
+        planner.setVisible(true);
+    }
+
     private ImageIcon toIcon(FuzeWardrobePlanner.Entity.Clothing.Photo photo, int maxW, int maxH) {
-        if (photo == null || photo.getJpegData() == null || photo.getJpegData().length == 0) {
+        if (photo == null) {
             return null;
         }
-        ImageIcon rawIcon = new ImageIcon(photo.getJpegData());
-        if (rawIcon.getIconWidth() <= 0 || rawIcon.getIconHeight() <= 0) {
+        ImageIcon rawIcon = null;
+        if (photo.getJpegData() != null && photo.getJpegData().length > 0) {
+            rawIcon = new ImageIcon(photo.getJpegData());
+        } else if (photo.getFilePath() != null && !photo.getFilePath().isEmpty()) {
+            rawIcon = new ImageIcon(photo.getFilePath());
+        }
+        if (rawIcon == null || rawIcon.getIconWidth() <= 0 || rawIcon.getIconHeight() <= 0) {
             return null;
         }
         Image scaled = rawIcon.getImage().getScaledInstance(maxW, maxH, Image.SCALE_SMOOTH);

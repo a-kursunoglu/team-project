@@ -24,4 +24,9 @@ public class InMemoryWardrobeRepository implements WardrobeRepository {
     public List<ClothingArticle> getAll() {
         return new ArrayList<>(storage); // defensive copy
     }
+
+    @Override
+    public void deleteByName(String name) {
+        storage.removeIf(item -> item.getName().equalsIgnoreCase(name));
+    }
 }
