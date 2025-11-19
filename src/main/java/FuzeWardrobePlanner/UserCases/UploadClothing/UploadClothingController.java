@@ -13,10 +13,10 @@ public class UploadClothingController {
                             String category,
                             int weatherRating,
                             boolean waterproof,
-                            Photo imagePath) {
+                            String filePath) {
 
         UploadClothingInputData inputData = new UploadClothingInputData(
-                name, category, weatherRating, waterproof, imagePath
+                name, category, weatherRating, waterproof, filePath
         );
 
         interactor.execute(inputData);

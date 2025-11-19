@@ -9,9 +9,6 @@ public class Photo {
     private byte[] jpegData;
     private String filePath;
 
-    public Photo(String imagePath) {
-    }
-
     public Photo(String filePath) {
         this.filePath = filePath;
     }

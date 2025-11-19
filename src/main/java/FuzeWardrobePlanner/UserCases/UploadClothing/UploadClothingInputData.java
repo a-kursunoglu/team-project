@@ -7,15 +7,15 @@ public class UploadClothingInputData {
     private final String category;
     private final int weatherRating;
     private final boolean waterproof;
-    private final Photo imagePath;
+    private final String filePath;
 
     public UploadClothingInputData(String name, String category, int weatherRating,
-                                   boolean waterproof, Photo imagePath) {
+                                   boolean waterproof, String filePath) {
         this.name = name;
         this.category = category;
         this.weatherRating = weatherRating;
         this.waterproof = waterproof;
-        this.imagePath = imagePath;
+        this.filePath = filePath;
     }
     public String getName() {
         return name;
@@ -29,7 +29,7 @@ public class UploadClothingInputData {
     public boolean isWaterproof() {
         return waterproof;
     }
-    public Photo getImagePath() {
-        return imagePath;
+    public String getFilePath() {
+        return filePath;
     }
 }
