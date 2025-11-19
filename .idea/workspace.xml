@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c7620808-9e8a-41e0-90c7-e2d220ceea3b" name="Changes" comment="Nate">
+      <change afterPath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/cityCoordinates/CitiesLongLat.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Clothing/ClothingArticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Clothing/ClothingArticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/API/WeatherFetcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/API/WeatherFetcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/LocationStringToCoordinate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/LocationStringToCoordinate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/WeatherTrip.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/WeatherTrip.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/WeatherWeek.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/WeatherWeek.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,22 +38,22 @@
     &quot;assignee&quot;: &quot;NateAn481&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/a-kursunoglu/team-project&quot;,
-    &quot;accountId&quot;: &quot;5443e15b-bf9e-4c18-a864-f426c8d71798&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/a-kursunoglu/team-project.git",
+    "accountId": "84e38197-e51f-4110-ba4f-1e9a0ff82893"
   },
-  &quot;recentNewPullRequestHead&quot;: {
-    &quot;server&quot;: {
-      &quot;useHttp&quot;: false,
-      &quot;host&quot;: &quot;github.com&quot;,
-      &quot;port&quot;: null,
-      &quot;suffix&quot;: null
+  "recentNewPullRequestHead": {
+    "server": {
+      "useHttp": false,
+      "host": "github.com",
+      "port": null,
+      "suffix": null
     },
-    &quot;owner&quot;: &quot;a-kursunoglu&quot;,
-    &quot;repository&quot;: &quot;team-project&quot;
+    "owner": "a-kursunoglu",
+    "repository": "team-project"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -61,16 +65,22 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Main.executor": "Run",
+    "Application.tempCheckLocationString.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "git-widget-placeholder": "photo",
+    "git-widget-placeholder": "JadenTodoLocationHandling",
     "kotlin-language-version-configured": "true",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/cityCoordinates" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="FuzeWardrobePlanner.App.Main" />
@@ -173,12 +183,21 @@
       <option name="project" value="LOCAL" />
       <updated>1763514304326</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Added LocationStringToCoordinate">
+      <option name="closed" value="true" />
+      <created>1763519668138</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1763519668138</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="sign" />
     <MESSAGE value="Nate" />
-    <option name="LAST_COMMIT_MESSAGE" value="Nate" />
+    <MESSAGE value="Added LocationStringToCoordinate" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added LocationStringToCoordinate" />
   </component>
 </project>
