@@ -17,12 +17,13 @@ public class WeatherDay {
 
     /**
      * Creates a new instance of WeatherDay, only really to be called by WeatherFetcher
-     * @param weather is the int WMO code for the weather condition (look it up
-     *                cuz it's cool)
+     *
+     * @param weather         is the int WMO code for the weather condition (look it up
+     *                        cuz it's cool)
      * @param temperatureHigh Celsius double representing daily high
-     * @param temperatureLow Celsius double representing daily low
-     * @param location a double[] form of [longitude, latitude]
-     * @param date a string representation of "yyyy-mm-dd"
+     * @param temperatureLow  Celsius double representing daily low
+     * @param location        a double[] form of [longitude, latitude]
+     * @param date            a string representation of "yyyy-mm-dd"
      */
     public WeatherDay(int weather, double temperatureHigh, double temperatureLow, double[] location, String date) {
         this.temperatureHigh = temperatureHigh;
@@ -36,6 +37,7 @@ public class WeatherDay {
     /**
      * Handles all WMO Codes so we shouldn't have to worry about them outside of
      * this
+     *
      * @param weatherCode same WMO code above
      * @return String representation of what I thought the most common codes
      * would be given the website we use and NOAA data.
@@ -43,17 +45,13 @@ public class WeatherDay {
     public String weatherCodeToString(int weatherCode) {
         if (weatherCode == 0) {
             return "Sunny";
-        }
-        else if (weatherCode == 1 || weatherCode == 2) {
+        } else if (weatherCode == 1 || weatherCode == 2) {
             return "Scattered Clouds";
-        }
-        else if (weatherCode < 20 || (40 <= weatherCode && weatherCode < 50)) {
+        } else if (weatherCode < 20 || (40 <= weatherCode && weatherCode < 50)) {
             return "Cloudy Skies";
-        }
-        else if (weatherCode == 22 || weatherCode== 26) {
+        } else if (weatherCode == 22 || weatherCode == 26) {
             return "Snowing";
-        }
-        else if (weatherCode <= 200) {
+        } else if (weatherCode <= 200) {
             return "Raining";
         }
         return "No Weather Data";
@@ -67,7 +65,9 @@ public class WeatherDay {
         return temperatureHigh;
     }
 
-    public double getTemperatureLow() {return temperatureLow;}
+    public double getTemperatureLow() {
+        return temperatureLow;
+    }
 
     public Outfit getOutfit() {
         return outfit;
@@ -87,7 +87,7 @@ public class WeatherDay {
 
     @Override
     public String toString() {
-        return "WeatherDay on " + date+
+        return "WeatherDay on " + date +
                 " weather='" + weather + '\'' +
                 ", temperature high=" + temperatureHigh +
                 ", temperature low=" + temperatureLow +
@@ -96,7 +96,7 @@ public class WeatherDay {
                 + ", " + location[1] + '\'';
     }
 
-    public Object getTemperature() {
-        return null;
+    public double getTemperature() {
+        return (temperatureHigh + temperatureLow) / 2.0;
     }
 }

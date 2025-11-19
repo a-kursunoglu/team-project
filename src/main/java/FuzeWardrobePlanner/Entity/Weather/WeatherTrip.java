@@ -32,7 +32,7 @@ public class WeatherTrip extends WeatherDays{
         double latitude = locationObj.getLatitude();
         this.location = new double[]{longitude, latitude};
         this.startDate = startDate;
-        this.tripLength = Math.min(tripLength, 6);
+        this.tripLength = Math.min(tripLength, 7);
         this.weatherFetcher = new WeatherFetcher(startDate, this.tripLength, longitude, latitude);
         this.days = constructWeatherQueue();
     }
@@ -60,7 +60,7 @@ public class WeatherTrip extends WeatherDays{
     private Queue<WeatherDay> constructWeatherQueue(){
         JSONArray dates = weatherFetcher.getForecastDates();
         Queue<WeatherDay> weatherQueue = new LinkedList<>();
-        for (int i = 0; i < dates.length() - 1; i++){
+        for (int i = 0; i < dates.length(); i++){
             weatherQueue.add(weatherFetcher.getWeatherByDate(dates.getString(i)));
         }
         return weatherQueue;

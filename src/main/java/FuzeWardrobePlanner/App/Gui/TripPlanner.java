@@ -1,5 +1,9 @@
 package FuzeWardrobePlanner.App.Gui;
 
+import FuzeWardrobePlanner.Entity.Weather.WeatherDay;
+import FuzeWardrobePlanner.Entity.Weather.WeatherTrip;
+import FuzeWardrobePlanner.Entity.Weather.WeatherWeek;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
@@ -9,11 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.function.Consumer;
 
-/**
- * Trip Planner UI matching the provided wireframe.
- * Contains inputs for location, start/end dates, outfit count, and a grid placeholder,
- * plus a Generate button and a Back to Main Page button.
- */
 public class TripPlanner extends JFrame {
 
     private JComboBox<String> locationDropdown;
@@ -24,13 +23,13 @@ public class TripPlanner extends JFrame {
     private JButton generateButton;
     private JButton backButton;
 
-    private final Consumer<FuzeWardrobePlanner.Entity.Weather.WeatherWeek> onBackToMain;
+    private final Consumer<WeatherWeek> onBackToMain;
 
     public TripPlanner() {
         this(null);
     }
 
-    public TripPlanner(Consumer<FuzeWardrobePlanner.Entity.Weather.WeatherWeek> onBackToMain) {
+    public TripPlanner(Consumer<WeatherWeek> onBackToMain) {
         super("Trip Planner");
         this.onBackToMain = onBackToMain;
         initUi();
@@ -55,7 +54,7 @@ public class TripPlanner extends JFrame {
         add(content, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
 
-        setPreferredSize(new Dimension(1000, 500));
+        setPreferredSize(new Dimension(1100, 500));
         pack();
         setLocationRelativeTo(null);
 
@@ -67,12 +66,11 @@ public class TripPlanner extends JFrame {
 
         backButton.addActionListener(e -> {
             if (onBackToMain != null) {
-                // Let caller handle navigation/state
-                onBackToMain.accept(new FuzeWardrobePlanner.Entity.Weather.WeatherWeek());
+                onBackToMain.accept(new WeatherWeek());
             } else {
                 SwingUtilities.invokeLater(() -> {
                     MainPage main = new MainPage();
-                    main.loadFromWeatherWeek(new FuzeWardrobePlanner.Entity.Weather.WeatherWeek());
+                    main.loadFromWeatherWeek(new WeatherWeek());
                     main.setVisible(true);
                 });
             }
@@ -86,7 +84,6 @@ public class TripPlanner extends JFrame {
         form.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
 
         form.add(label("Location:"));
-        // TODO populate with actual locations
         locationDropdown = new JComboBox<>(new String[]{"(select)", "Toronto", "New York", "Vancouver"});
         locationDropdown.setMaximumSize(new Dimension(250, 32));
         form.add(locationDropdown);
@@ -108,7 +105,6 @@ public class TripPlanner extends JFrame {
 
         form.add(Box.createVerticalStrut(10));
         form.add(label("Outfits Needed (7 max):"));
-        // TODO: provide numeric choices 1-7
         outfitsNeededDropdown = new JComboBox<>(new String[]{"1", "2", "3", "4", "5", "6", "7"});
         outfitsNeededDropdown.setMaximumSize(new Dimension(250, 32));
         form.add(outfitsNeededDropdown);
@@ -120,17 +116,19 @@ public class TripPlanner extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
-        // Placeholder table with 7 columns matching the wireframe
         String[] cols = {"D1", "D2", "D3", "D4", "D5", "D6", "D7"};
-        Object[][] rows = new Object[3][cols.length]; // minimal rows to show grid lines
+        Object[][] rows = new Object[3][cols.length];
         plannerTable = new JTable(rows, cols);
         plannerTable.setBorder(new LineBorder(Color.GRAY));
         plannerTable.setGridColor(Color.GRAY);
         plannerTable.setRowHeight(40);
+        plannerTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         JScrollPane scrollPane = new JScrollPane(plannerTable);
-        scrollPane.setPreferredSize(new Dimension(500, 300));
+        scrollPane.setPreferredSize(new Dimension(800, 260));
         panel.add(scrollPane, BorderLayout.CENTER);
+
+        adjustColumnWidths(cols.length);
 
         return panel;
     }
@@ -142,6 +140,15 @@ public class TripPlanner extends JFrame {
     }
 
     private void generatePlan() {
+        String loc = (String) locationDropdown.getSelectedItem();
+        if (loc == null || "(select)".equals(loc)) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select a location.",
+                    "Missing location",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         String start = startField.getText().trim();
         String end = endField.getText().trim();
         if (start.isEmpty() || end.isEmpty()) {
@@ -151,6 +158,7 @@ public class TripPlanner extends JFrame {
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
+
         LocalDate startDate;
         LocalDate endDate;
         try {
@@ -164,6 +172,7 @@ public class TripPlanner extends JFrame {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         if (endDate.isBefore(startDate)) {
             JOptionPane.showMessageDialog(this,
                     "End date cannot be before start date.",
@@ -171,18 +180,45 @@ public class TripPlanner extends JFrame {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         int outfitsNeeded = Integer.parseInt(outfitsNeededDropdown.getSelectedItem().toString());
         int days = Math.min(7, outfitsNeeded);
+
+        // Use WeatherTrip to fetch real weather for this trip
+        WeatherTrip trip = new WeatherTrip(loc, startDate.toString(), days);
+
         String[] cols = new String[days];
         Object[][] rows = new Object[3][days];
+
         for (int i = 0; i < days; i++) {
-            LocalDate d = startDate.plusDays(i);
-            cols[i] = d.toString();
-            rows[0][i] = "Date: " + d;
-            rows[1][i] = "Temp: -";      // placeholder until weather hookup
-            rows[2][i] = "Outfit: -";    // placeholder until outfits are generated
+            WeatherDay day = trip.getWeatherDay(i);
+            if (day == null) {
+                LocalDate d = startDate.plusDays(i);
+                cols[i] = d.toString();
+                rows[0][i] = "Date: " + d;
+                rows[1][i] = "Temp: -";
+                rows[2][i] = "Outfit: -";
+            } else {
+                cols[i] = day.getDate();
+                rows[0][i] = "Date: " + day.getDate();
+
+                double avg = (day.getTemperatureHigh() + day.getTemperatureLow()) / 2.0;
+                rows[1][i] = "Temp: " + Math.round(avg) + "°";
+
+                rows[2][i] = "Outfit: -"; // 这里可以以后接上真正的 outfit
+            }
         }
+
         plannerTable.setModel(new DefaultTableModel(rows, cols));
+        plannerTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        adjustColumnWidths(days);
+    }
+
+    private void adjustColumnWidths(int days) {
+        int width = 130;
+        for (int i = 0; i < days; i++) {
+            plannerTable.getColumnModel().getColumn(i).setPreferredWidth(width);
+        }
     }
 
     public static void main(String[] args) {

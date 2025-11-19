@@ -18,6 +18,7 @@ public class WeatherWeek extends WeatherDays{
     private WeatherFetcher weatherFetcher;
     private Iterator<WeatherDay> iterator;
     private double[] location;
+    private String defaultLocationName;
 
     /**
      * Does not have any params because it uses default start date of today
@@ -27,6 +28,7 @@ public class WeatherWeek extends WeatherDays{
         // Default location of Toronto
         location = new double[]{-79.3733, 43.7417};
         this.weatherFetcher = new WeatherFetcher();
+        this.defaultLocationName = "Toronto Canada";
         this.days = constructWeatherQueue();
     }
 
@@ -36,6 +38,7 @@ public class WeatherWeek extends WeatherDays{
         double latitude = locationObj.getLatitude();
         this.location = new double[]{longitude, latitude};
         this.weatherFetcher = new WeatherFetcher(longitude, latitude);
+        this.defaultLocationName = locationString;
         this.days = constructWeatherQueue();
     }
 
@@ -53,9 +56,10 @@ public class WeatherWeek extends WeatherDays{
         return weatherQueue;
     }
 
-    public String getDefaultLocation(){
-        return "Toronto Canada";
+    public String getDefaultLocation() {
+        return defaultLocationName;
     }
+
 
     @Override
     /**

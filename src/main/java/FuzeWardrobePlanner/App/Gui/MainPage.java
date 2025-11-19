@@ -13,29 +13,19 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Collections;
-import java.util.Objects;
 
-/**
- * Main landing page UI mock aligned to provided wireframe.
- */
 public class MainPage extends JFrame {
 
-    // Left side components
-    private JComboBox<String>   locationDropdown;
+    private JComboBox<String> locationDropdown;
     private JLabel currentLocationLabel;
     private JLabel temperatureLabel;
     private final WardrobeRepository wardrobeRepository;
     private WeatherWeek currentWeek;
+    private String currentLocation = "Toronto Canada";
     private final OutfitCreator outfitCreator = new OutfitCreator();
 
-    // Right side outfit display
     private JPanel outfitPanel;
 
     public MainPage() {
@@ -70,12 +60,23 @@ public class MainPage extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
 
         panel.add(label("Location:"));
-        // TODO: populate with real cities list; placeholder options for now
-        String defaultLoc = currentWeek != null ? safe(currentWeek.getDefaultLocation()) : "Toronto Canada";
-        locationDropdown = new JComboBox<>(new String[]{defaultLoc, "(select city)", "Toronto Canada", "New York", "Vancouver"});
+
+        String defaultLoc = currentLocation;
+
+        locationDropdown = new JComboBox<>(new String[]{
+                "Toronto Canada",
+                "New York",
+                "Vancouver"
+        });
         locationDropdown.setSelectedItem(defaultLoc);
         locationDropdown.setMaximumSize(new Dimension(250, 32));
         panel.add(locationDropdown);
+
+        locationDropdown.addActionListener(e -> {
+            String selected = Objects.toString(locationDropdown.getSelectedItem(), "Toronto Canada");
+            currentLocation = selected;
+            reloadWeatherForCurrentLocation();
+        });
 
         panel.add(Box.createVerticalStrut(12));
         panel.add(label("Your location is set to:"));
@@ -94,7 +95,6 @@ public class MainPage extends JFrame {
         JButton planWeekButton = makeButton("Plan for the Week");
         JButton refreshButton = makeButton("Refresh Outfit");
 
-// MAKE THIS BUTTON OPEN THE UPLOAD WINDOW
         addClothingButton.addActionListener(e -> openUploadClothingWindow());
         addTripButton.addActionListener(e -> openTripPlanner());
         viewWardrobeButton.addActionListener(e -> openWardrobeWindow());
@@ -113,21 +113,16 @@ public class MainPage extends JFrame {
     private void openUploadClothingWindow() {
         UploadClothingPresenter presenter = new UploadClothingPresenter(null);
 
-        // 2. Build interactor with shared repo
         UploadClothingInputBoundary interactor =
                 new UploadClothingInteractor(wardrobeRepository, presenter);
 
-        // 3. Controller
         UploadClothingController controller =
                 new UploadClothingController(interactor);
 
-        // 4. Swing UI panel (implements UploadClothingView)
         UploadClothingPanel uploadPanel = new UploadClothingPanel(controller);
 
-        // 5. Now connect presenter to UI
         presenter.setView(uploadPanel);
 
-        // 6. Show in a popup dialog
         JDialog dialog = new JDialog(this, "Add Clothing Item", true);
         dialog.setContentPane(uploadPanel);
         dialog.pack();
@@ -150,9 +145,6 @@ public class MainPage extends JFrame {
         return panel;
     }
 
-    /**
-     * Populate UI with WeatherWeek data (defaults to day 0 for "today").
-     */
     public void loadFromWeatherWeek(WeatherWeek week) {
         this.currentWeek = week;
         if (this.currentWeek != null) {
@@ -253,11 +245,14 @@ public class MainPage extends JFrame {
     }
 
     private void refreshOutfits() {
-        if (currentWeek == null) {
-            currentWeek = new WeatherWeek();
-        }
+        currentWeek = new WeatherWeek(currentLocation);
         generateOutfitsForWeek(currentWeek);
         loadFromWeatherWeek(currentWeek);
+    }
+
+    private void reloadWeatherForCurrentLocation() {
+        WeatherWeek week = new WeatherWeek(currentLocation);
+        loadFromWeatherWeek(week);
     }
 
     private void generateOutfitsForWeek(WeatherWeek week) {
@@ -278,14 +273,12 @@ public class MainPage extends JFrame {
     private Outfit generateOutfitWithNoRepeat(WeatherDay day,
                                               Map<String, List<ClothingArticle>> wardrobeMap,
                                               Set<String> previousNames) {
-        // Try to ensure at least top or bottom differs from previous day.
         Outfit first = outfitCreator.createOutfitForDay(day, shuffledCopy(wardrobeMap), false);
         if (first == null) return null;
         if (!isSameTopOrBottom(first, previousNames)) {
             return first;
         }
 
-        // Try a few more shuffled attempts to find a different top/bottom.
         for (int attempt = 0; attempt < 4; attempt++) {
             Outfit candidate = outfitCreator.createOutfitForDay(day, shuffledCopy(wardrobeMap), false);
             if (candidate != null && !isSameTopOrBottom(candidate, previousNames)) {
@@ -293,7 +286,6 @@ public class MainPage extends JFrame {
             }
         }
 
-        // Last attempt: remove previous top/bottom if possible
         Map<String, List<ClothingArticle>> filtered = new HashMap<>();
         for (Map.Entry<String, List<ClothingArticle>> entry : wardrobeMap.entrySet()) {
             List<ClothingArticle> list = new ArrayList<>();
@@ -307,7 +299,6 @@ public class MainPage extends JFrame {
         Outfit lastTry = outfitCreator.createOutfitForDay(day, filtered, false);
         return lastTry != null ? lastTry : first;
     }
-
 
     private Map<String, List<ClothingArticle>> shuffledCopy(Map<String, List<ClothingArticle>> original) {
         Map<String, List<ClothingArticle>> copy = new HashMap<>();
@@ -379,7 +370,7 @@ public class MainPage extends JFrame {
     private void openWeeklyPlanner() {
         WeeklyPlanner planner = new WeeklyPlanner();
         if (currentWeek == null) {
-            currentWeek = new WeatherWeek();
+            currentWeek = new WeatherWeek(currentLocation);
         }
         generateOutfitsForWeek(currentWeek);
         planner.setWeatherWeek(currentWeek);
@@ -406,7 +397,7 @@ public class MainPage extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             MainPage page = new MainPage();
-            page.loadFromWeatherWeek(new WeatherWeek());
+            page.reloadWeatherForCurrentLocation();
             page.setVisible(true);
         });
     }
