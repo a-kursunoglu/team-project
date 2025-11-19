@@ -20,6 +20,24 @@ public class WeatherTrip extends WeatherDays{
 
     /**
      * Creates an instance of WeatherTrip
+     * @param locationString String of the location ie "Toronto"
+     * @param startDate String of form "yyyy-mm-dd" NOTE there will be errors if
+     *                  startDate is too far in the future
+     * @param tripLength Number of days of the trip, same applies from startDate,
+     *                   if too long, weather won't have predictions
+     */
+    public WeatherTrip(String locationString, String startDate, int tripLength) {
+        LocationStringToCoordinate locationObj = new LocationStringToCoordinate(locationString);
+        double longitude = locationObj.getLongitude();
+        double latitude = locationObj.getLatitude();
+        this.location = new double[]{longitude, latitude};
+        this.startDate = startDate;
+        this.tripLength = Math.min(tripLength, 6);
+        this.weatherFetcher = new WeatherFetcher(startDate, this.tripLength, longitude, latitude);
+        this.days = constructWeatherQueue();
+    }
+    /**
+     * Creates an instance of WeatherTrip
      * @param longitude double
      * @param latitude double
      * @param startDate String of form "yyyy-mm-dd" NOTE there will be errors if

@@ -1,7 +1,7 @@
 package FuzeWardrobePlanner.Entity.Weather;
 
 import FuzeWardrobePlanner.API.WeatherFetcher;
-import FuzeWardrobePlanner.Entity.Weather.WeatherDay;
+import FuzeWardrobePlanner.Entity.Weather.LocationStringToCoordinate;
 import org.json.JSONArray;
 
 import java.util.Iterator;
@@ -17,15 +17,28 @@ public class WeatherWeek extends WeatherDays{
     private Queue<WeatherDay> days;
     private WeatherFetcher weatherFetcher;
     private Iterator<WeatherDay> iterator;
+    private double[] location;
 
     /**
      * Does not have any params because it uses default start date of today
      * and the default location of Toronto
      */
     public WeatherWeek() {
+        // Default location of Toronto
+        location = new double[]{-79.3733, 43.7417};
         this.weatherFetcher = new WeatherFetcher();
         this.days = constructWeatherQueue();
     }
+
+    public WeatherWeek(String locationString) {
+        LocationStringToCoordinate locationObj = new LocationStringToCoordinate(locationString);
+        double longitude = locationObj.getLongitude();
+        double latitude = locationObj.getLatitude();
+        this.location = new double[]{longitude, latitude};
+        this.weatherFetcher = new WeatherFetcher(longitude, latitude);
+        this.days = constructWeatherQueue();
+    }
+
 
     /**
      * Constructs the actual Queue

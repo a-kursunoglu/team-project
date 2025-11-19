@@ -42,6 +42,19 @@ public class WeatherFetcher {
         loadWeeklyForecast();
     }
 
+    public WeatherFetcher(double longitude, double latitude) {
+        // This is the default that will run for WeatherWeek
+        // 7 forecast days by default (6 cuz starts at zero)
+        this.forecastDays = 6;
+        // Default location of Toronto (Drake's home)
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.startDate = LocalDate.now().toString();
+        this.weatherData = new JSONObject();
+        this.isDataLoaded = false;
+        loadWeeklyForecast();
+    }
+
     public WeatherFetcher(String startDate, int forecastDays) {
         // No use for this unless someone needs to implement it
         this.longitude = -79.38;
