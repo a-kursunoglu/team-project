@@ -6,8 +6,6 @@ public class ClothingArticle {
     private int weatherRating;
     private boolean waterproof;
     private Photo image;
-    public ClothingArticle() {
-    }
 
     public ClothingArticle(String name, String category, int weatherRating, boolean waterproof, Photo image) {
         this.name = name;
