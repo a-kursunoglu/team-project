@@ -1,16 +1,26 @@
 package FuzeWardrobePlanner.App.Gui;
 
+import FuzeWardrobePlanner.Entity.Clothing.ClothingArticle;
+import FuzeWardrobePlanner.Entity.Clothing.Outfit;
+import FuzeWardrobePlanner.Entity.Clothing.WardrobeRepository;
 import FuzeWardrobePlanner.Entity.Weather.WeatherDay;
 import FuzeWardrobePlanner.Entity.Weather.WeatherTrip;
 import FuzeWardrobePlanner.Entity.Weather.WeatherWeek;
+import FuzeWardrobePlanner.UserCases.OutfitCreator;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class TripPlanner extends JFrame {
@@ -19,19 +29,25 @@ public class TripPlanner extends JFrame {
     private JTextField startField;
     private JTextField endField;
     private JComboBox<String> outfitsNeededDropdown;
-    private JTable plannerTable;
+    private JPanel daysPanel;
     private JButton generateButton;
     private JButton backButton;
 
     private final Consumer<WeatherWeek> onBackToMain;
+    private final WardrobeRepository wardrobeRepository;
+    private final OutfitCreator outfitCreator;
 
     public TripPlanner() {
-        this(null);
+        this(null, null, null);
     }
 
-    public TripPlanner(Consumer<WeatherWeek> onBackToMain) {
+    public TripPlanner(Consumer<WeatherWeek> onBackToMain,
+                       WardrobeRepository wardrobeRepository,
+                       OutfitCreator outfitCreator) {
         super("Trip Planner");
         this.onBackToMain = onBackToMain;
+        this.wardrobeRepository = wardrobeRepository;
+        this.outfitCreator = outfitCreator != null ? outfitCreator : new OutfitCreator();
         initUi();
     }
 
@@ -43,7 +59,7 @@ public class TripPlanner extends JFrame {
         content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         content.add(buildFormPanel(), BorderLayout.WEST);
-        content.add(buildTablePanel(), BorderLayout.CENTER);
+        content.add(buildCardsPanel(), BorderLayout.CENTER);
 
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
         generateButton = new JButton("Generate");
@@ -112,25 +128,13 @@ public class TripPlanner extends JFrame {
         return form;
     }
 
-    private JPanel buildTablePanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-
-        String[] cols = {"D1", "D2", "D3", "D4", "D5", "D6", "D7"};
-        Object[][] rows = new Object[3][cols.length];
-        plannerTable = new JTable(rows, cols);
-        plannerTable.setBorder(new LineBorder(Color.GRAY));
-        plannerTable.setGridColor(Color.GRAY);
-        plannerTable.setRowHeight(40);
-        plannerTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-        JScrollPane scrollPane = new JScrollPane(plannerTable);
-        scrollPane.setPreferredSize(new Dimension(800, 260));
-        panel.add(scrollPane, BorderLayout.CENTER);
-
-        adjustColumnWidths(cols.length);
-
-        return panel;
+    private JScrollPane buildCardsPanel() {
+        daysPanel = new JPanel(new GridLayout(1, 7, 6, 6));
+        JScrollPane scrollPane = new JScrollPane(daysPanel,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setPreferredSize(new Dimension(900, 320));
+        return scrollPane;
     }
 
     private JLabel label(String text) {
@@ -186,44 +190,190 @@ public class TripPlanner extends JFrame {
 
         // Use WeatherTrip to fetch real weather for this trip
         WeatherTrip trip = new WeatherTrip(loc, startDate.toString(), days);
+        Map<String, List<ClothingArticle>> wardrobeMap = buildWardrobeMap(
+                wardrobeRepository != null ? wardrobeRepository.getAll() : List.of()
+        );
+        Set<String> prevNames = new HashSet<>();
 
-        String[] cols = new String[days];
-        Object[][] rows = new Object[3][days];
-
+        if (daysPanel != null) {
+            daysPanel.removeAll();
+            daysPanel.setLayout(new GridLayout(1, Math.max(1, days), 6, 6));
+        }
         for (int i = 0; i < days; i++) {
             WeatherDay day = trip.getWeatherDay(i);
             if (day == null) {
                 LocalDate d = startDate.plusDays(i);
-                cols[i] = d.toString();
-                rows[0][i] = "Date: " + d;
-                rows[1][i] = "Temp: -";
-                rows[2][i] = "Outfit: -";
+                day = new WeatherDay(0, 0, 0, trip.getLocation(), d.toString());
             } else {
-                cols[i] = day.getDate();
-                rows[0][i] = "Date: " + day.getDate();
-
-                double avg = (day.getTemperatureHigh() + day.getTemperatureLow()) / 2.0;
-                rows[1][i] = "Temp: " + Math.round(avg) + "°";
-
-                rows[2][i] = "Outfit: -"; // 这里可以以后接上真正的 outfit
+                Outfit outfit = wardrobeMap.isEmpty()
+                        ? null
+                        : generateOutfitWithNoRepeat(day, wardrobeMap, prevNames);
+                day.setOutfit(outfit);
+                prevNames = extractNames(outfit);
+            }
+            if (daysPanel != null) {
+                daysPanel.add(buildDayCard(day, day.getDate(), i + 1));
             }
         }
 
-        plannerTable.setModel(new DefaultTableModel(rows, cols));
-        plannerTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        adjustColumnWidths(days);
+        if (daysPanel != null) {
+            daysPanel.revalidate();
+            daysPanel.repaint();
+        }
     }
 
-    private void adjustColumnWidths(int days) {
-        int width = 130;
-        for (int i = 0; i < days; i++) {
-            plannerTable.getColumnModel().getColumn(i).setPreferredWidth(width);
+    private Map<String, List<ClothingArticle>> buildWardrobeMap(List<ClothingArticle> items) {
+        Map<String, List<ClothingArticle>> map = new HashMap<>();
+        map.put("top", new ArrayList<>());
+        map.put("bottom", new ArrayList<>());
+        map.put("outer", new ArrayList<>());
+        map.put("accessory", new ArrayList<>());
+
+        for (ClothingArticle item : items) {
+            if (item == null || item.getCategory() == null) continue;
+            String cat = item.getCategory().toLowerCase();
+            if (cat.contains("top")) {
+                map.get("top").add(item);
+            } else if (cat.contains("bottom") || cat.contains("pant") || cat.contains("bottoms")) {
+                map.get("bottom").add(item);
+            } else if (cat.contains("outer")) {
+                map.get("outer").add(item);
+            } else if (cat.contains("access")) {
+                map.get("accessory").add(item);
+            }
         }
+        return map;
+    }
+
+    private Outfit generateOutfitWithNoRepeat(WeatherDay day,
+                                              Map<String, List<ClothingArticle>> wardrobeMap,
+                                              Set<String> previousNames) {
+        Outfit first = outfitCreator.createOutfitForDay(day, shuffledCopy(wardrobeMap), false);
+        if (first == null) return null;
+        if (!isSameTopOrBottom(first, previousNames)) {
+            return first;
+        }
+
+        for (int attempt = 0; attempt < 4; attempt++) {
+            Outfit candidate = outfitCreator.createOutfitForDay(day, shuffledCopy(wardrobeMap), false);
+            if (candidate != null && !isSameTopOrBottom(candidate, previousNames)) {
+                return candidate;
+            }
+        }
+
+        Map<String, List<ClothingArticle>> filtered = new HashMap<>();
+        for (Map.Entry<String, List<ClothingArticle>> entry : wardrobeMap.entrySet()) {
+            List<ClothingArticle> list = new ArrayList<>();
+            for (ClothingArticle item : entry.getValue()) {
+                if (item != null && (previousNames == null || !previousNames.contains(item.getName()))) {
+                    list.add(item);
+                }
+            }
+            filtered.put(entry.getKey(), list);
+        }
+        Outfit lastTry = outfitCreator.createOutfitForDay(day, filtered, false);
+        return lastTry != null ? lastTry : first;
+    }
+
+    private Map<String, List<ClothingArticle>> shuffledCopy(Map<String, List<ClothingArticle>> original) {
+        Map<String, List<ClothingArticle>> copy = new HashMap<>();
+        for (Map.Entry<String, List<ClothingArticle>> entry : original.entrySet()) {
+            List<ClothingArticle> list = new ArrayList<>(entry.getValue());
+            Collections.shuffle(list);
+            copy.put(entry.getKey(), list);
+        }
+        return copy;
+    }
+
+    private boolean isSameTopOrBottom(Outfit outfit, Set<String> previousNames) {
+        if (outfit == null || previousNames == null) return false;
+        Map<String, ClothingArticle> items = outfit.getItems();
+        if (items == null) return false;
+        ClothingArticle top = items.get("top");
+        ClothingArticle bottom = items.get("bottom");
+        boolean sameTop = top != null && top.getName() != null && previousNames.contains(top.getName());
+        boolean sameBottom = bottom != null && bottom.getName() != null && previousNames.contains(bottom.getName());
+        return sameTop && sameBottom;
+    }
+
+    private Set<String> extractNames(Outfit outfit) {
+        Set<String> names = new HashSet<>();
+        if (outfit == null || outfit.getItems() == null) {
+            return names;
+        }
+        for (ClothingArticle article : outfit.getItems().values()) {
+            if (article != null && article.getName() != null) {
+                names.add(article.getName());
+            }
+        }
+        return names;
+    }
+
+    private JPanel buildOutfitPanel(Outfit outfit) {
+        JPanel panel = new JPanel();
+        panel.setOpaque(true);
+        panel.setBackground(Color.WHITE);
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 6, 6));
+        if (outfit == null || outfit.getItems() == null || outfit.getItems().isEmpty()) {
+            panel.add(new JLabel("Outfit: -"));
+            return panel;
+        }
+        for (Map.Entry<String, ClothingArticle> entry : outfit.getItems().entrySet()) {
+            ClothingArticle article = entry.getValue();
+            if (article == null) continue;
+            JPanel badge = new JPanel(new BorderLayout());
+            badge.setBorder(new LineBorder(Color.LIGHT_GRAY));
+            JLabel icon = new JLabel("", SwingConstants.CENTER);
+            icon.setPreferredSize(new Dimension(70, 70));
+            icon.setIcon(toIcon(article.getImage(), 70, 70));
+            badge.add(icon, BorderLayout.CENTER);
+            JLabel title = new JLabel(article.getName(), SwingConstants.CENTER);
+            title.setFont(title.getFont().deriveFont(11f));
+            badge.add(title, BorderLayout.SOUTH);
+            panel.add(badge);
+        }
+        return panel;
+    }
+
+    private ImageIcon toIcon(FuzeWardrobePlanner.Entity.Clothing.Photo photo, int maxW, int maxH) {
+        if (photo == null) {
+            return null;
+        }
+        ImageIcon rawIcon = null;
+        if (photo.getJpegData() != null && photo.getJpegData().length > 0) {
+            rawIcon = new ImageIcon(photo.getJpegData());
+        } else if (photo.getFilePath() != null && !photo.getFilePath().isEmpty()) {
+            rawIcon = new ImageIcon(photo.getFilePath());
+        }
+        if (rawIcon == null || rawIcon.getIconWidth() <= 0 || rawIcon.getIconHeight() <= 0) {
+            return null;
+        }
+        Image scaled = rawIcon.getImage().getScaledInstance(maxW, maxH, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaled);
+    }
+
+    private JPanel buildDayCard(WeatherDay day, String date, int index) {
+        JPanel card = new JPanel(new BorderLayout(4, 4));
+        card.setBorder(BorderFactory.createTitledBorder(new LineBorder(Color.GRAY), "Day " + index));
+
+        JPanel header = new JPanel();
+        header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
+        header.add(new JLabel("Date: " + (date != null ? date : "-")));
+        String tempText = "-";
+        if (day != null) {
+            double avg = (day.getTemperatureHigh() + day.getTemperatureLow()) / 2.0;
+            tempText = Math.round(avg) + "°";
+        }
+        header.add(new JLabel("Avg temp: " + tempText));
+        card.add(header, BorderLayout.NORTH);
+
+        card.add(buildOutfitPanel(day != null ? day.getOutfit() : null), BorderLayout.CENTER);
+        return card;
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            TripPlanner planner = new TripPlanner();
+            TripPlanner planner = new TripPlanner(null, null, null);
             planner.setVisible(true);
         });
     }

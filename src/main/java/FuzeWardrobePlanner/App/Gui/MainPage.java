@@ -344,7 +344,7 @@ public class MainPage extends JFrame {
             String cat = item.getCategory().toLowerCase();
             if (cat.contains("top")) {
                 map.get("top").add(item);
-            } else if (cat.contains("bottom")) {
+            } else if (cat.contains("bottom") || cat.contains("pant") || cat.contains("bottoms")) {
                 map.get("bottom").add(item);
             } else if (cat.contains("outer")) {
                 map.get("outer").add(item);
@@ -357,7 +357,7 @@ public class MainPage extends JFrame {
 
     private void openTripPlanner() {
         SwingUtilities.invokeLater(() -> {
-            TripPlanner planner = new TripPlanner(this::loadFromWeatherWeek);
+            TripPlanner planner = new TripPlanner(this::loadFromWeatherWeek, wardrobeRepository, outfitCreator);
             planner.setVisible(true);
         });
     }
