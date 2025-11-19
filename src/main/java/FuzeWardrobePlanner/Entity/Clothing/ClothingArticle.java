@@ -6,7 +6,6 @@ public class ClothingArticle {
     private int weatherRating;
     private boolean waterproof;
     private Photo image;
-    private String category;
     public ClothingArticle() {
     }
 
