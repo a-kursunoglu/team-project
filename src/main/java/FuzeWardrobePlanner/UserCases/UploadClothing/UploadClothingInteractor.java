@@ -1,0 +1,44 @@
+package FuzeWardrobePlanner.UserCases.UploadClothing;
+
+import FuzeWardrobePlanner.Entity.Clothing.ClothingArticle;
+import FuzeWardrobePlanner.Entity.Clothing.Photo;
+import FuzeWardrobePlanner.Entity.Clothing.WardrobeRepository;
+
+public class UploadClothingInteractor implements UploadClothingInputBoundary {
+    private final WardrobeRepository wardrobeDataAccess;
+    private final UploadClothingOutputBoundary presenter;
+
+    public UploadClothingInteractor(WardrobeRepository wardrobeDataAccess,
+                                    UploadClothingOutputBoundary presenter) {
+        this.wardrobeDataAccess = wardrobeDataAccess;
+        this.presenter = presenter;
+
+    }
+
+    @Override
+    public void execute(UploadClothingInputData inputData) {
+        if (inputData.getName() == null || inputData.getName().isEmpty()) {
+            presenter.prepareFailView("Name cannot be empty.");
+            return;
+        }
+        if (wardrobeDataAccess.existsByName(inputData.getName())) {
+            presenter.prepareFailView("A clothing item with this name already exists.");
+            return;
+        }
+        Photo photo = new Photo(inputData.getImagePath().toString());
+
+        ClothingArticle article = new ClothingArticle(
+                inputData.getName(),
+                inputData.getCategory(), inputData.getWeatherRating(), inputData.isWaterproof(),
+                inputData.getImagePath()
+        );
+        wardrobeDataAccess.save(article);
+        UploadClothingOutputData outputData =
+                new UploadClothingOutputData(article.getName(),
+                        "Added clothing item: " + article.getName());
+
+        presenter.prepareSuccessView(outputData);
+    }
+
+    }
+

@@ -1,0 +1,6 @@
+package FuzeWardrobePlanner.UserCases.UploadClothing;
+
+public interface UploadClothingView {
+    void showSuccess(String message);
+    void showError(String errorMessage);
+}

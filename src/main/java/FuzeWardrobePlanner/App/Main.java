@@ -1,21 +1,38 @@
 package FuzeWardrobePlanner.App;
 
-import FuzeWardrobePlanner.API.WeatherFetcher;
-import FuzeWardrobePlanner.Entity.Weather.WeatherTrip;
-import FuzeWardrobePlanner.Entity.Weather.WeatherWeek;
+import FuzeWardrobePlanner.App.Gui.WardrobePanel;
+import FuzeWardrobePlanner.Entity.Clothing.ClothingArticle;
+import FuzeWardrobePlanner.Entity.Clothing.Photo;
+import FuzeWardrobePlanner.Entity.Clothing.Wardrobe;
+import FuzeWardrobePlanner.UserCases.ManageWardrobeInteractor;
 
-import java.util.Map;
+import javax.swing.*;
+import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
-       // Do whatever you want here until we implement the final stuff, yay
 
-        // If anyone wants to see what the weather code outputs, uncomment
-        // the following:
-//        WeatherWeek weatherWeek = new WeatherWeek();
-//        System.out.println(weatherWeek.getWeatherDay(1));
-//        WeatherTrip trip = new WeatherTrip(-122.42, 37.775,"2025-11-20", 10);
-//        System.out.println(trip.toString());
+        Wardrobe wardrobe = new Wardrobe();
 
+        wardrobe.addItem(new ClothingArticle(
+                "Hoodie", "TOPS", 2, false, new Photo("placeholder.jpg")   // put real photo here later
+        ));
+        wardrobe.addItem(new ClothingArticle(
+                "Jacket", "OUTERWEAR", 3, true, new Photo("placeholder.jpg")
+        ));
+        wardrobe.addItem(new ClothingArticle(
+                "Jacket2", "OUTERWEAR", 3, true, new Photo("placeholder.jpg")
+        ));
+
+        ManageWardrobeInteractor interactor = new ManageWardrobeInteractor(wardrobe);
+
+        JFrame frame = new JFrame("My Wardrobe");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+
+        WardrobePanel wardrobePanel = new WardrobePanel(interactor);
+        frame.add(new JScrollPane(wardrobePanel), BorderLayout.CENTER);
+
+        frame.setVisible(true);
     }
 }
