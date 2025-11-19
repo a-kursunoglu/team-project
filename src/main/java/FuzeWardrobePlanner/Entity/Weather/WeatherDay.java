@@ -95,4 +95,8 @@ public class WeatherDay {
                 ", location='" + location[0]
                 + ", " + location[1] + '\'';
     }
+
+    public Object getTemperature() {
+        return null;
+    }
 }

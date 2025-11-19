@@ -6,6 +6,7 @@ import FuzeWardrobePlanner.Entity.Clothing.Photo;
 import FuzeWardrobePlanner.Entity.Clothing.Wardrobe;
 import FuzeWardrobePlanner.UserCases.ManageWardrobeInteractor;
 
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -29,7 +30,14 @@ public class Main {
 
         WardrobePanel wardrobePanel = new WardrobePanel(interactor);
         frame.add(new JScrollPane(wardrobePanel), BorderLayout.CENTER);
+        JButton weatherButton = new JButton("View Today's Weather");
+        weatherButton.addActionListener(e -> {
+            new FuzeWardrobePlanner.View.WeatherGUI();
+        });
+
+        frame.add(weatherButton, BorderLayout.NORTH);
 
         frame.setVisible(true);
     }
+
 }
