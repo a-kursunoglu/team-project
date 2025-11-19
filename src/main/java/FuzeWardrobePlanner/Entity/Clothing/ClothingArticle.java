@@ -5,9 +5,9 @@ public class ClothingArticle {
     private String category;
     private int weatherRating;
     private boolean waterproof;
-    private String image;
+    private Photo image;
 
-    public ClothingArticle(String name, String category, int weatherRating, boolean waterproof, String image) {
+    public ClothingArticle(String name, String category, int weatherRating, boolean waterproof, Photo image) {
         this.name = name;
         this.category = category;
         this.weatherRating = weatherRating;
