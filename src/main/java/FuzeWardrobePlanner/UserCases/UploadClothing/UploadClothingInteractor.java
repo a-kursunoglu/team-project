@@ -25,7 +25,7 @@ public class UploadClothingInteractor implements UploadClothingInputBoundary {
             presenter.prepareFailView("A clothing item with this name already exists.");
             return;
         }
-        Photo photo = new Photo(inputData.getImagePath().toString());
+        Photo photo = new Photo(inputData.getImagePath().getFilePath());
 
         ClothingArticle article = new ClothingArticle(
                 inputData.getName(),
