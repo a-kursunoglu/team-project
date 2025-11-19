@@ -7,14 +7,20 @@ import java.nio.file.Files;
 public class Photo {
 
     private byte[] jpegData;
+    private String filePath;
 
     public Photo() {
+    }
+
+    public Photo(String filePath) {
+        this.filePath = filePath;
     }
 
     public void upload(File imageFile) {
         try {
             this.jpegData = Files.readAllBytes(imageFile.toPath());
-            System.out.println("Upload successful, file size: " + jpegData.length + " bytes");
+            this.filePath = imageFile.getAbsolutePath();
+            System.out.println("Upload failed!");
 
         } catch (IOException e) {
             System.out.println("Upload failed!");
@@ -24,5 +30,9 @@ public class Photo {
 
     public byte[] getJpegData() {
         return jpegData;
+    }
+
+    public String getFilePath() {
+        return filePath;
     }
 }
