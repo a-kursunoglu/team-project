@@ -16,7 +16,7 @@ import java.util.Map;
 public class MainPage extends JFrame {
 
     // Left side components
-    private JComboBox<String> locationDropdown;
+    private JComboBox<String>   locationDropdown;
     private JLabel currentLocationLabel;
     private JLabel temperatureLabel;
 
