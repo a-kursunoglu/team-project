@@ -68,7 +68,7 @@ public class WeeklyPlanner extends JFrame {
             WeatherDay day = i < days.size() ? days.get(i) : null;
             // Use placeholder variable-like labels when real data is missing so the UI is never blank.
             cells[0][i].setText(day != null ? safe(day.getDate()) : "date" + (i + 1));
-            cells[1][i].setText(day != null ? (day.getTemperature() + "°") : "temp" + (i + 1));
+            cells[1][i].setText(day != null ? (day.getAverageTemperature() + "°") : "temp" + (i + 1));
             cells[2][i].setText("outfit" + (i + 1)); // placeholder for future content
         }
     }
