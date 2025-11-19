@@ -65,6 +65,14 @@ public class UploadClothingPanel extends JPanel implements UploadClothingView {
         formPanel.add(weatherRatingDropdown, c);
         row++;
 
+        // WEATHER RATING HELP TEXT
+        c.gridx = 0; c.gridy = row; c.gridwidth = 2;
+        JLabel ratingHint = new JLabel("0 = light/hot weather, 5 = heaviest/coldest");
+        ratingHint.setFont(ratingHint.getFont().deriveFont(Font.ITALIC, 11f));
+        formPanel.add(ratingHint, c);
+        c.gridwidth = 1;
+        row++;
+
         // WATERPROOF CHECKBOX
         c.gridx = 0; c.gridy = row;
         formPanel.add(new JLabel("Waterproof:"), c);

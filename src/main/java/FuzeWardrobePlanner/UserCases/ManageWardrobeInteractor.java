@@ -1,25 +1,29 @@
 package FuzeWardrobePlanner.UserCases;
 
 import FuzeWardrobePlanner.Entity.Clothing.Wardrobe;
-import FuzeWardrobePlanner.Entity.Clothing.ClothingArticle; // import ClothingArticle
-import java.util.List; // import List
+import FuzeWardrobePlanner.Entity.Clothing.WardrobeRepository;
+import FuzeWardrobePlanner.Entity.Clothing.ClothingArticle;
+import java.util.List;
 
 public class ManageWardrobeInteractor {
-    private final Wardrobe wardrobe;
+    private final WardrobeRepository repository;
 
-    public ManageWardrobeInteractor(Wardrobe wardrobe) {
-        this.wardrobe = wardrobe;
+    public ManageWardrobeInteractor(WardrobeRepository repository) {
+        this.repository = repository;
     }
 
     public boolean deleteItem(String name) {
-        return wardrobe.deleteItemByName(name);
+        repository.deleteByName(name);
+        return true;
     }
 
     public List<ClothingArticle> viewWardrobe() {
-        return wardrobe.getItems(); // make sure getItems() returns List<ClothingArticle>
+        return repository.getAll();
     }
 
     public Wardrobe getWardrobe() {
-        return this.wardrobe;
+        Wardrobe wardrobe = new Wardrobe();
+        repository.getAll().forEach(wardrobe::addItem);
+        return wardrobe;
     }
 }

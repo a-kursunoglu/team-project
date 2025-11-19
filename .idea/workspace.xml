@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c7620808-9e8a-41e0-90c7-e2d220ceea3b" name="Changes" comment="Nate">
+      <change afterPath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/UploadClothing/InMemoryWardrobeRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Clothing/ClothingArticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Clothing/ClothingArticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/MainPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/MainPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/UploadClothing/UploadClothingPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/UploadClothing/UploadClothingPresenter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/WardrobeGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/ClothingTile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/ClothingTile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,22 +40,23 @@
     &quot;assignee&quot;: &quot;NateAn481&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/a-kursunoglu/team-project&quot;,
-    &quot;accountId&quot;: &quot;5443e15b-bf9e-4c18-a864-f426c8d71798&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/a-kursunoglu/team-project.git",
+    "accountId": "49740450-da60-4650-b610-5cce4bd3dc27"
+    "accountId": "dbfc566a-8700-4088-a725-695df3cb7f5e"
   },
-  &quot;recentNewPullRequestHead&quot;: {
-    &quot;server&quot;: {
-      &quot;useHttp&quot;: false,
-      &quot;host&quot;: &quot;github.com&quot;,
-      &quot;port&quot;: null,
-      &quot;suffix&quot;: null
+  "recentNewPullRequestHead": {
+    "server": {
+      "useHttp": false,
+      "host": "github.com",
+      "port": null,
+      "suffix": null
     },
-    &quot;owner&quot;: &quot;a-kursunoglu&quot;,
-    &quot;repository&quot;: &quot;team-project&quot;
+    "owner": "a-kursunoglu",
+    "repository": "team-project"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -61,13 +68,16 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Main.executor": "Run",
+    "Application.MainPage.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "git-widget-placeholder": "photo",
+    "git-widget-placeholder": "addclothingitem",
+    "git-widget-placeholder": "deleteconfirm",
     "kotlin-language-version-configured": "true",
+    "node.js.selected.package.tslint": "(autodetect)",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }
 }]]></component>
@@ -173,12 +183,30 @@
       <option name="project" value="LOCAL" />
       <updated>1763514304326</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="done #19">
+      <option name="closed" value="true" />
+      <created>1763520688242</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1763520688242</updated>
+    <task id="LOCAL-00008" summary="photo fixed">
+      <option name="closed" value="true" />
+      <created>1763519557027</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1763519557027</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="sign" />
     <MESSAGE value="Nate" />
-    <option name="LAST_COMMIT_MESSAGE" value="Nate" />
+    <MESSAGE value="done #19" />
+    <option name="LAST_COMMIT_MESSAGE" value="done #19" />
+    <MESSAGE value="photo fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="photo fixed" />
   </component>
 </project>

@@ -25,7 +25,7 @@ public class WeeklyPlanner extends JFrame {
     }
 
     private void initUi() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(8, 8));
 
         // Left: location label
@@ -126,11 +126,16 @@ public class WeeklyPlanner extends JFrame {
     }
 
     private ImageIcon toIcon(Photo photo, int maxW, int maxH) {
-        if (photo == null || photo.getJpegData() == null || photo.getJpegData().length == 0) {
+        if (photo == null) {
             return null;
         }
-        ImageIcon rawIcon = new ImageIcon(photo.getJpegData());
-        if (rawIcon.getIconWidth() <= 0 || rawIcon.getIconHeight() <= 0) {
+        ImageIcon rawIcon = null;
+        if (photo.getJpegData() != null && photo.getJpegData().length > 0) {
+            rawIcon = new ImageIcon(photo.getJpegData());
+        } else if (photo.getFilePath() != null && !photo.getFilePath().isEmpty()) {
+            rawIcon = new ImageIcon(photo.getFilePath());
+        }
+        if (rawIcon == null || rawIcon.getIconWidth() <= 0 || rawIcon.getIconHeight() <= 0) {
             return null;
         }
         Image scaled = rawIcon.getImage().getScaledInstance(maxW, maxH, Image.SCALE_SMOOTH);

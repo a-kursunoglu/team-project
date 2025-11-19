@@ -2,7 +2,12 @@ package FuzeWardrobePlanner.App.Gui;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.function.Consumer;
 
 /**
  * Trip Planner UI matching the provided wireframe.
@@ -19,8 +24,15 @@ public class TripPlanner extends JFrame {
     private JButton generateButton;
     private JButton backButton;
 
+    private final Consumer<FuzeWardrobePlanner.Entity.Weather.WeatherWeek> onBackToMain;
+
     public TripPlanner() {
+        this(null);
+    }
+
+    public TripPlanner(Consumer<FuzeWardrobePlanner.Entity.Weather.WeatherWeek> onBackToMain) {
         super("Trip Planner");
+        this.onBackToMain = onBackToMain;
         initUi();
     }
 
@@ -51,29 +63,19 @@ public class TripPlanner extends JFrame {
     }
 
     private void wireActions() {
-        generateButton.addActionListener(e -> {
-            String start = startField.getText().trim();
-            String end = endField.getText().trim();
-            if (start.isEmpty() || end.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        "Please enter both start and end dates (yyyy-mm-dd).",
-                        "Missing dates",
-                        JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            // TODO: replace with actual trip generation logic
-            JOptionPane.showMessageDialog(this,
-                    "Generate trip plan (to be implemented)",
-                    "Trip Planner", JOptionPane.INFORMATION_MESSAGE);
-        });
+        generateButton.addActionListener(e -> generatePlan());
 
         backButton.addActionListener(e -> {
-            // Simple navigation: open MainPage and close this window.
-            SwingUtilities.invokeLater(() -> {
-                MainPage main = new MainPage();
-                main.loadFromWeatherWeek(new FuzeWardrobePlanner.Entity.Weather.WeatherWeek());
-                main.setVisible(true);
-            });
+            if (onBackToMain != null) {
+                // Let caller handle navigation/state
+                onBackToMain.accept(new FuzeWardrobePlanner.Entity.Weather.WeatherWeek());
+            } else {
+                SwingUtilities.invokeLater(() -> {
+                    MainPage main = new MainPage();
+                    main.loadFromWeatherWeek(new FuzeWardrobePlanner.Entity.Weather.WeatherWeek());
+                    main.setVisible(true);
+                });
+            }
             dispose();
         });
     }
@@ -137,6 +139,50 @@ public class TripPlanner extends JFrame {
         JLabel lbl = new JLabel(text);
         lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
         return lbl;
+    }
+
+    private void generatePlan() {
+        String start = startField.getText().trim();
+        String end = endField.getText().trim();
+        if (start.isEmpty() || end.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Please enter both start and end dates (yyyy-mm-dd).",
+                    "Missing dates",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        LocalDate startDate;
+        LocalDate endDate;
+        try {
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            startDate = LocalDate.parse(start, fmt);
+            endDate = LocalDate.parse(end, fmt);
+        } catch (DateTimeParseException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Dates must be in format yyyy-mm-dd.",
+                    "Invalid date",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (endDate.isBefore(startDate)) {
+            JOptionPane.showMessageDialog(this,
+                    "End date cannot be before start date.",
+                    "Invalid range",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int outfitsNeeded = Integer.parseInt(outfitsNeededDropdown.getSelectedItem().toString());
+        int days = Math.min(7, outfitsNeeded);
+        String[] cols = new String[days];
+        Object[][] rows = new Object[3][days];
+        for (int i = 0; i < days; i++) {
+            LocalDate d = startDate.plusDays(i);
+            cols[i] = d.toString();
+            rows[0][i] = "Date: " + d;
+            rows[1][i] = "Temp: -";      // placeholder until weather hookup
+            rows[2][i] = "Outfit: -";    // placeholder until outfits are generated
+        }
+        plannerTable.setModel(new DefaultTableModel(rows, cols));
     }
 
     public static void main(String[] args) {
