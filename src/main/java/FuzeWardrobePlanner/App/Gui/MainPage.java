@@ -4,6 +4,7 @@ import FuzeWardrobePlanner.Entity.Clothing.ClothingArticle;
 import FuzeWardrobePlanner.Entity.Clothing.Outfit;
 import FuzeWardrobePlanner.Entity.Clothing.JsonWardrobeRepository;
 import FuzeWardrobePlanner.Entity.Clothing.WardrobeRepository;
+import FuzeWardrobePlanner.Entity.Weather.LocationStringToCoordinate;
 import FuzeWardrobePlanner.Entity.Weather.WeatherDay;
 import FuzeWardrobePlanner.Entity.Weather.WeatherWeek;
 import FuzeWardrobePlanner.UserCases.OutfitCreator;
@@ -23,8 +24,10 @@ public class MainPage extends JFrame {
     private JLabel temperatureLabel;
     private final WardrobeRepository wardrobeRepository;
     private WeatherWeek currentWeek;
-    private String currentLocation = "Toronto Canada";
+    private String currentLocation;
     private final OutfitCreator outfitCreator = new OutfitCreator();
+    private final LocationStringToCoordinate locationTranslator;
+    private final String[] availableCities;
 
     private JPanel outfitPanel;
 
@@ -35,6 +38,10 @@ public class MainPage extends JFrame {
         String wardrobePath = Paths.get(userHome, ".fuzewardrobe", "wardrobe.json").toString();
         this.wardrobeRepository = new JsonWardrobeRepository(wardrobePath);
         this.currentWeek = null;
+        this.locationTranslator = new LocationStringToCoordinate();
+        String[] cities = locationTranslator.getCities();
+        this.availableCities = cities != null ? cities : new String[]{"Toronto Canada", "New York", "Vancouver"};
+        this.currentLocation = availableCities[0];
 
         initUi();
     }
@@ -63,11 +70,7 @@ public class MainPage extends JFrame {
 
         String defaultLoc = currentLocation;
 
-        locationDropdown = new JComboBox<>(new String[]{
-                "Toronto Canada",
-                "New York",
-                "Vancouver"
-        });
+        locationDropdown = new JComboBox<>(buildLocationOptions(defaultLoc));
         locationDropdown.setSelectedItem(defaultLoc);
         locationDropdown.setMaximumSize(new Dimension(250, 32));
         panel.add(locationDropdown);
@@ -357,7 +360,7 @@ public class MainPage extends JFrame {
 
     private void openTripPlanner() {
         SwingUtilities.invokeLater(() -> {
-            TripPlanner planner = new TripPlanner(this::loadFromWeatherWeek, wardrobeRepository, outfitCreator);
+            TripPlanner planner = new TripPlanner(this::loadFromWeatherWeek, wardrobeRepository, outfitCreator, availableCities);
             planner.setVisible(true);
         });
     }
@@ -400,5 +403,14 @@ public class MainPage extends JFrame {
             page.reloadWeatherForCurrentLocation();
             page.setVisible(true);
         });
+    }
+
+    private String[] buildLocationOptions(String defaultLocation) {
+        LinkedHashSet<String> options = new LinkedHashSet<>();
+        if (defaultLocation != null) {
+            options.add(defaultLocation);
+        }
+        options.addAll(Arrays.asList(availableCities));
+        return options.toArray(new String[0]);
     }
 }
