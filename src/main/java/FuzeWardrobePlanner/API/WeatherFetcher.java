@@ -105,7 +105,6 @@ public class WeatherFetcher {
      */
     public WeatherDay getWeatherByDate(String date) {
     //Please refer to WeatherDay
-        //TODO: Create an error if day is out of bound
     int i = 0;
     while (i < this.forecastDays) {
         String day = weatherData.getJSONObject("daily").getJSONArray("time").getString(i);
