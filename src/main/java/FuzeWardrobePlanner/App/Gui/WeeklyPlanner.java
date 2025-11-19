@@ -6,8 +6,6 @@ import FuzeWardrobePlanner.Entity.Weather.WeatherWeek;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Simple weekly planner UI: shows location on the left and a 7x3 grid on the right.
@@ -60,17 +58,18 @@ public class WeeklyPlanner extends JFrame {
                 : "-";
         locationLabel.setText("Location: " + location);
 
-        List<WeatherDay> days = (week != null && week.getWeekDays() != null)
-                ? week.getWeekDays()
-                : new ArrayList<>();
-
         for (int i = 0; i < 7; i++) {
-            WeatherDay day = i < days.size() ? days.get(i) : null;
-            // Use placeholder variable-like labels when real data is missing so the UI is never blank.
+            WeatherDay day = (week != null) ? week.getWeatherDay(i) : null;
             cells[0][i].setText(day != null ? safe(day.getDate()) : "date" + (i + 1));
-            cells[1][i].setText(day != null ? (day.getAverageTemperature() + "°") : "temp" + (i + 1));
+            cells[1][i].setText(day != null ? (formatAvgTemp(day)) : "temp" + (i + 1));
             cells[2][i].setText("outfit" + (i + 1)); // placeholder for future content
         }
+    }
+
+    private String formatAvgTemp(WeatherDay day) {
+        // Average the high/low to display a single temperature
+        double avg = (day.getTemperatureHigh() + day.getTemperatureLow()) / 2.0;
+        return Math.round(avg) + "°";
     }
 
     private String safe(String value) {

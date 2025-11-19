@@ -31,9 +31,15 @@ public class OutfitCreator {
         }
 
         boolean isRaining = isRainingOverride || (day != null && isRainyString(day.getWeather()));
+
+        /*
+         * Clothing warmth rating is 0–5 (0 = lightest, 5 = warmest).
+         * We map the day's average temperature (C) to this 0–5 target using simple buckets.
+         * Colder temps map to higher warmth ratings (layer up).
+         */
         int targetWarmth = day != null
-                ? (int) Math.round(day.getAverageTemperature())
-                : 20; // fallback target
+                ? tempToWarmthRating(averageTemp(day))
+                : 2; // neutral fallback
 
         ClothingArticle top = chooseBest(wardrobe.get("top"), targetWarmth, isRaining);
         ClothingArticle bottom = chooseBest(wardrobe.get("bottom"), targetWarmth, isRaining);
@@ -108,6 +114,19 @@ public class OutfitCreator {
         return chooseBest(options, targetWarmth, preferWaterproof);
     }
 
+    /**
+     * Map temperature (C) to a 0-5 warmth rating bucket.
+     * 5 = very cold, 0 = hot.
+     */
+    private int tempToWarmthRating(double tempC) {
+        if (tempC <= -5) return 5;
+        if (tempC <= 2) return 4;
+        if (tempC <= 9) return 3;
+        if (tempC <= 16) return 2;
+        if (tempC <= 23) return 1;
+        return 0;
+    }
+
     private boolean isRainyString(String weather) {
         return weather != null && weather.toLowerCase().contains("rain");
     }
@@ -128,5 +147,9 @@ public class OutfitCreator {
         }
         double[] loc = day.getLocation();
         return String.format("%.4f, %.4f", loc[0], loc[1]);
+    }
+
+    private double averageTemp(WeatherDay day) {
+        return (day.getTemperatureHigh() + day.getTemperatureLow()) / 2.0;
     }
 }
