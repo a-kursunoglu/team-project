@@ -6,6 +6,9 @@ public class ClothingArticle {
     private int weatherRating;
     private boolean waterproof;
     private Photo image;
+    private String category;
+    public ClothingArticle() {
+    }
 
     public ClothingArticle(String name, String category, int weatherRating, boolean waterproof, Photo image) {
         this.name = name;
@@ -13,7 +16,7 @@ public class ClothingArticle {
         this.weatherRating = weatherRating;
         this.waterproof = waterproof;
         this.image = image;
-        }
+    }
 
     // getters
     public String getName() {
@@ -32,5 +35,9 @@ public class ClothingArticle {
 
     public Photo getImage() {
         return image;
+    }
+
+    public String getCategory() {
+        return category;
     }
 }

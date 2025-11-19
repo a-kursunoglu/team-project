@@ -21,4 +21,14 @@ public class Wardrobe {
     public boolean deleteItemByName(String name){
         return items.removeIf(i -> i.getName().equalsIgnoreCase(name));
     }
+
+    public List<ClothingArticle> getByCategory(String category){
+        List<ClothingArticle> result = new ArrayList<>();
+        for (ClothingArticle item : items) {
+            if (item.getCategory().equalsIgnoreCase(category)) {
+                result.add(item);
+            }
+        }
+        return result;
+    }
 }

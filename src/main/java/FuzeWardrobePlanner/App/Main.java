@@ -15,10 +15,13 @@ public class Main {
         Wardrobe wardrobe = new Wardrobe();
 
         wardrobe.addItem(new ClothingArticle(
-                "Hoodie", 2, false, new Photo("placeholder.jpg")   // put real photo here later
+                "Hoodie", "TOPS", 2, false, new Photo("placeholder.jpg")   // put real photo here later
         ));
         wardrobe.addItem(new ClothingArticle(
-                "Jacket", 3, true, new Photo("placeholder.jpg")
+                "Jacket", "OUTERWEAR", 3, true, new Photo("placeholder.jpg")
+        ));
+        wardrobe.addItem(new ClothingArticle(
+                "Jacket2", "OUTERWEAR", 3, true, new Photo("placeholder.jpg")
         ));
 
         ManageWardrobeInteractor interactor = new ManageWardrobeInteractor(wardrobe);
