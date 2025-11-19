@@ -29,8 +29,10 @@ public class UploadClothingInteractor implements UploadClothingInputBoundary {
 
         ClothingArticle article = new ClothingArticle(
                 inputData.getName(),
-                inputData.getCategory(), inputData.getWeatherRating(), inputData.isWaterproof(),
-                inputData.getFilePath()
+                inputData.getCategory(),
+                inputData.getWeatherRating(),
+                inputData.isWaterproof(),
+                photo
         );
         wardrobeDataAccess.save(article);
         UploadClothingOutputData outputData =
@@ -41,4 +43,3 @@ public class UploadClothingInteractor implements UploadClothingInputBoundary {
     }
 
     }
-
