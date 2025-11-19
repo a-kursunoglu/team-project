@@ -31,9 +31,18 @@ public class ClothingTile extends JPanel {
         deleteButton.setBounds(75, 5, 20, 20);
 
         deleteButton.addActionListener(e -> {
-            interactor.deleteItem(item.getName());
-            if (refreshCallback != null) {
-                refreshCallback.run();
+            int option = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure you want to delete " + item.getName() + "?",
+                "Confirm Deletion",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+            );
+            if (option == JOptionPane.YES_OPTION) {
+                interactor.deleteItem(item.getName());
+                if (refreshCallback != null) {
+                    refreshCallback.run();
+                }
             }
         });
 
