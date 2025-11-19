@@ -1,4 +1,4 @@
-package FuzeWardrobePlanner.View;
+package FuzeWardrobePlanner.App.Gui;
 
 import FuzeWardrobePlanner.UserCases.ViewWeather;
 import FuzeWardrobePlanner.Entity.Weather.WeatherDay;
