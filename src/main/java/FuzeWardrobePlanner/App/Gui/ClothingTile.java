@@ -11,32 +11,19 @@ public class ClothingTile extends JPanel {
 
     public ClothingTile(ClothingArticle item, ManageWardrobeInteractor interactor, Runnable refreshCallback) {
         setLayout(null);
-        setPreferredSize(new Dimension(100, 100));
+        setPreferredSize(new Dimension(100, 120));
+        setBackground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        ImageIcon icon = null;
-        Object rawImage = item.getImage();
-
-        if (rawImage != null) {
-            Image img = null;
-
-            if (rawImage instanceof BufferedImage) {
-                img = (BufferedImage) rawImage;
-            } else if (rawImage instanceof Image) {
-                img = (Image) rawImage;
-            }
-
-            if (img != null) {
-                Image scaled = img.getScaledInstance(90, 90, Image.SCALE_SMOOTH);
-                icon = new ImageIcon(scaled);
-            }
-        }
-
         JLabel imageLabel = new JLabel();
-        if (icon != null) {
-            imageLabel.setIcon(icon);
+        imageLabel.setBounds(10, 25, 80, 80);
+
+        if (item.getImage() != null && item.getImage().getFilePath() != null) {
+            ImageIcon original = new ImageIcon(item.getImage().getFilePath());
+            Image img = original.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+            imageLabel.setIcon(new ImageIcon(img));
         }
-        imageLabel.setBounds(5, 5, 90, 90);
+
         add(imageLabel);
 
         JButton deleteButton = new JButton("X");
@@ -44,12 +31,16 @@ public class ClothingTile extends JPanel {
         deleteButton.setBounds(75, 5, 20, 20);
 
         deleteButton.addActionListener(e -> {
-            interactor.deleteItem(item.getName()); // item.getName() must return String
+            interactor.deleteItem(item.getName());
             if (refreshCallback != null) {
                 refreshCallback.run();
             }
         });
 
         add(deleteButton);
+
+        JLabel nameLabel = new JLabel(item.getName(), SwingConstants.CENTER);
+        nameLabel.setBounds(0, 105, 100, 15);
+        add(nameLabel);
     }
 }

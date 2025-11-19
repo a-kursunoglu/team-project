@@ -18,4 +18,8 @@ public class ManageWardrobeInteractor {
     public List<ClothingArticle> viewWardrobe() {
         return wardrobe.getItems(); // make sure getItems() returns List<ClothingArticle>
     }
+
+    public Wardrobe getWardrobe() {
+        return this.wardrobe;
+    }
 }
