@@ -31,6 +31,7 @@ public class OutfitCreator {
         }
 
         boolean isRaining = isRainingOverride || (day != null && isRainyString(day.getWeather()));
+        double averageTemperature = day != null ? averageTemp(day) : 15.0;
 
         /*
          * Clothing warmth rating is 0–5 (0 = lightest, 5 = warmest).
@@ -49,8 +50,23 @@ public class OutfitCreator {
             return null;
         }
 
-        ClothingArticle outer = chooseOptional(wardrobe.get("outer"), targetWarmth, isRaining);
-        ClothingArticle accessory = chooseOptional(wardrobe.get("accessory"), targetWarmth, isRaining);
+        int baseWarmth = top.getWeatherRating() + bottom.getWeatherRating();
+        boolean needsWarmthLayer = baseWarmth < targetWarmth;
+        boolean needsRainLayer = isRaining;
+
+        ClothingArticle outer = null;
+        if ((needsWarmthLayer || needsRainLayer) && wardrobe.get("outer") != null) {
+            outer = chooseOptional(wardrobe.get("outer"), targetWarmth, isRaining);
+            if (outer == null && needsRainLayer) {
+                outer = chooseBestWaterproof(wardrobe.get("outer"));
+            }
+        }
+
+        boolean includeAccessory = targetWarmth >= 4 || averageTemperature <= 8 || isRaining;
+        ClothingArticle accessory = null;
+        if (includeAccessory && wardrobe.get("accessory") != null) {
+            accessory = chooseOptional(wardrobe.get("accessory"), targetWarmth, isRaining);
+        }
 
         Map<String, ClothingArticle> items = new HashMap<>();
         items.put("top", top);
@@ -65,9 +81,7 @@ public class OutfitCreator {
         String title = buildTitle(day, isRaining);
         boolean waterproof = isRaining && (hasWaterproof(top) || hasWaterproof(bottom)
                 || hasWaterproof(outer) || hasWaterproof(accessory));
-        int combinedWarmth = top.getWeatherRating()
-                + bottom.getWeatherRating()
-                + (outer != null ? outer.getWeatherRating() : 0);
+        int combinedWarmth = baseWarmth + (outer != null ? outer.getWeatherRating() : 0);
 
         return new Outfit(items, title, combinedWarmth, waterproof);
     }
@@ -112,6 +126,16 @@ public class OutfitCreator {
     private ClothingArticle chooseOptional(List<ClothingArticle> options, int targetWarmth, boolean preferWaterproof) {
         // Optional: only include if we have a decent match
         return chooseBest(options, targetWarmth, preferWaterproof);
+    }
+
+    private ClothingArticle chooseBestWaterproof(List<ClothingArticle> options) {
+        if (options == null) return null;
+        for (ClothingArticle article : options) {
+            if (article != null && article.isWaterproof()) {
+                return article;
+            }
+        }
+        return null;
     }
 
     /**

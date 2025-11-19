@@ -15,9 +15,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,18 +38,23 @@ public class TripPlanner extends JFrame {
     private final Consumer<WeatherWeek> onBackToMain;
     private final WardrobeRepository wardrobeRepository;
     private final OutfitCreator outfitCreator;
+    private final String[] availableCities;
 
     public TripPlanner() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
     public TripPlanner(Consumer<WeatherWeek> onBackToMain,
                        WardrobeRepository wardrobeRepository,
-                       OutfitCreator outfitCreator) {
+                       OutfitCreator outfitCreator,
+                       String[] availableCities) {
         super("Trip Planner");
         this.onBackToMain = onBackToMain;
         this.wardrobeRepository = wardrobeRepository;
         this.outfitCreator = outfitCreator != null ? outfitCreator : new OutfitCreator();
+        this.availableCities = availableCities != null && availableCities.length > 0
+                ? availableCities
+                : new String[]{"Toronto Canada", "New York", "Vancouver"};
         initUi();
     }
 
@@ -100,7 +107,7 @@ public class TripPlanner extends JFrame {
         form.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
 
         form.add(label("Location:"));
-        locationDropdown = new JComboBox<>(new String[]{"(select)", "Toronto", "New York", "Vancouver"});
+        locationDropdown = new JComboBox<>(buildLocationOptions());
         locationDropdown.setMaximumSize(new Dimension(250, 32));
         form.add(locationDropdown);
 
@@ -373,8 +380,15 @@ public class TripPlanner extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            TripPlanner planner = new TripPlanner(null, null, null);
+            TripPlanner planner = new TripPlanner(null, null, null, null);
             planner.setVisible(true);
         });
+    }
+
+    private String[] buildLocationOptions() {
+        LinkedHashSet<String> options = new LinkedHashSet<>();
+        options.add("(select)");
+        options.addAll(Arrays.asList(availableCities));
+        return options.toArray(new String[0]);
     }
 }
