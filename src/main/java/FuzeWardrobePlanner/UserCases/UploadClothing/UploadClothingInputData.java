@@ -1,14 +1,16 @@
 package FuzeWardrobePlanner.UserCases.UploadClothing;
 
+import FuzeWardrobePlanner.Entity.Clothing.Photo;
+
 public class UploadClothingInputData {
     private final String name;
     private final String category;
     private final int weatherRating;
     private final boolean waterproof;
-    private final String imagePath;
+    private final Photo imagePath;
 
     public UploadClothingInputData(String name, String category, int weatherRating,
-                                   boolean waterproof, String imagePath) {
+                                   boolean waterproof, Photo imagePath) {
         this.name = name;
         this.category = category;
         this.weatherRating = weatherRating;
@@ -27,7 +29,7 @@ public class UploadClothingInputData {
     public boolean isWaterproof() {
         return waterproof;
     }
-    public String getImagePath() {
+    public Photo getImagePath() {
         return imagePath;
     }
 }

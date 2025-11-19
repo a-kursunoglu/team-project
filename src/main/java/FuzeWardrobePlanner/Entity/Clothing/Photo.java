@@ -8,7 +8,7 @@ public class Photo {
 
     private byte[] jpegData;
 
-    public Photo() {
+    public Photo(String imagePath) {
     }
 
     public void upload(File imageFile) {
