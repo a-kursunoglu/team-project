@@ -34,7 +34,6 @@ public class UploadClothingPanel extends JPanel implements UploadClothingView {
 
         int row = 0;
 
-        // NAME FIELD
         c.gridx = 0; c.gridy = row;
         formPanel.add(new JLabel("Name:"), c);
 
@@ -43,7 +42,6 @@ public class UploadClothingPanel extends JPanel implements UploadClothingView {
         formPanel.add(nameField, c);
         row++;
 
-        // CLOTHING TYPE DROPDOWN
         c.gridx = 0; c.gridy = row;
         formPanel.add(new JLabel("Clothing Type:"), c);
 
@@ -54,7 +52,6 @@ public class UploadClothingPanel extends JPanel implements UploadClothingView {
         formPanel.add(clothingTypeDropdown, c);
         row++;
 
-        // WEATHER RATING DROPDOWN
         c.gridx = 0; c.gridy = row;
         formPanel.add(new JLabel("Weather Rating:"), c);
 
@@ -65,7 +62,6 @@ public class UploadClothingPanel extends JPanel implements UploadClothingView {
         formPanel.add(weatherRatingDropdown, c);
         row++;
 
-        // WEATHER RATING HELP TEXT
         c.gridx = 0; c.gridy = row; c.gridwidth = 2;
         JLabel ratingHint = new JLabel("0 = light/hot weather, 5 = heaviest/coldest");
         ratingHint.setFont(ratingHint.getFont().deriveFont(Font.ITALIC, 11f));
@@ -73,7 +69,6 @@ public class UploadClothingPanel extends JPanel implements UploadClothingView {
         c.gridwidth = 1;
         row++;
 
-        // WATERPROOF CHECKBOX
         c.gridx = 0; c.gridy = row;
         formPanel.add(new JLabel("Waterproof:"), c);
 
@@ -82,20 +77,17 @@ public class UploadClothingPanel extends JPanel implements UploadClothingView {
         formPanel.add(waterproofCheckbox, c);
         row++;
 
-        // UPLOAD BUTTON
         JButton uploadButton = new JButton("UPLOAD");
         uploadButton.addActionListener(e -> uploadImage());
         c.gridx = 0; c.gridy = row;
         formPanel.add(uploadButton, c);
 
-        // SAVE BUTTON
         JButton saveButton = new JButton("SAVE");
         saveButton.addActionListener(e -> saveClothing());
         c.gridx = 1;
         formPanel.add(saveButton, c);
         row++;
 
-        // MESSAGE LABEL
         messageLabel = new JLabel(" ");
         messageLabel.setForeground(Color.RED);
         c.gridx = 0; c.gridy = row; c.gridwidth = 2;
@@ -103,7 +95,6 @@ public class UploadClothingPanel extends JPanel implements UploadClothingView {
 
         add(formPanel, BorderLayout.WEST);
 
-        // RIGHT SIDE IMAGE PREVIEW
         imagePreviewLabel = new JLabel();
         imagePreviewLabel.setPreferredSize(new Dimension(300, 250));
         imagePreviewLabel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -114,7 +105,6 @@ public class UploadClothingPanel extends JPanel implements UploadClothingView {
         add(imagePanel, BorderLayout.CENTER);
     }
 
-    // UPLOAD BUTTON ACTION
     private void uploadImage() {
         JFileChooser chooser = new JFileChooser();
         int option = chooser.showOpenDialog(this);
@@ -125,7 +115,6 @@ public class UploadClothingPanel extends JPanel implements UploadClothingView {
 
             ImageIcon icon = new ImageIcon(selectedImagePath);
 
-            // Scale Image for Preview
             Image scaledImage = icon.getImage().getScaledInstance(
                     280, 240, Image.SCALE_SMOOTH
             );
@@ -133,7 +122,6 @@ public class UploadClothingPanel extends JPanel implements UploadClothingView {
         }
     }
 
-    // SAVE BUTTON ACTION
     private void saveClothing() {
         String name = nameField.getText().trim();
         String category = clothingTypeDropdown.getSelectedItem().toString();
@@ -159,7 +147,6 @@ public class UploadClothingPanel extends JPanel implements UploadClothingView {
         );
     }
 
-    // MESSAGES
     @Override
     public void showSuccess(String message) {
         messageLabel.setForeground(new Color(0,128,0)); // green
