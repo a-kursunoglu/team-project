@@ -17,12 +17,10 @@ public class WeatherGUI extends JFrame {
     public WeatherGUI() {
         super("Weather Viewer");
 
-        // Layout
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Input panel
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new GridLayout(3, 2));
 
@@ -39,12 +37,10 @@ public class WeatherGUI extends JFrame {
 
         add(inputPanel, BorderLayout.NORTH);
 
-        // Output area
         outputArea = new JTextArea();
         outputArea.setEditable(false);
         add(new JScrollPane(outputArea), BorderLayout.CENTER);
 
-        // Button action
         fetchBtn.addActionListener(e -> displayWeather());
 
         setVisible(true);
@@ -58,7 +54,7 @@ public class WeatherGUI extends JFrame {
         WeatherDay day;
 
         if (latText.isEmpty() || lonText.isEmpty()) {
-            // Default Toronto
+
             WeatherFetcher f = new WeatherFetcher();
             day = f.getWeatherByDate(LocalDate.now().toString());
         } else {
