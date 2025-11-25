@@ -195,7 +195,6 @@ public class TripPlanner extends JFrame {
         int outfitsNeeded = Integer.parseInt(outfitsNeededDropdown.getSelectedItem().toString());
         int days = Math.min(7, outfitsNeeded);
 
-        // Use WeatherTrip to fetch real weather for this trip
         WeatherTrip trip = new WeatherTrip(loc, startDate.toString(), days);
         Map<String, List<ClothingArticle>> wardrobeMap = buildWardrobeMap(
                 wardrobeRepository != null ? wardrobeRepository.getAll() : List.of()
