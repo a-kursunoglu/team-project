@@ -14,7 +14,6 @@ public class UploadClothingPresenter implements UploadClothingOutputBoundary {
 
     @Override
     public void prepareSuccessView(UploadClothingOutputData outputData) {
-        // You can also trigger a refresh of the wardrobe list here if needed
         view.showSuccess(outputData.getMessage());
     }
 

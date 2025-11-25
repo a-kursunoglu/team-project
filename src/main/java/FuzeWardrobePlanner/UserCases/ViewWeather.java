@@ -36,10 +36,8 @@ public class ViewWeather {
     public void displayToday(double latitude, double longitude) {
 
         String today = LocalDate.now().toString();
-        int days = 3; // fetch at least today's range (you can choose 1 or more)
+        int days = 3;
 
-        // Your WeatherFetcher constructor is:
-        // (String startDate, int forecastDays, double longitude, double latitude)
         WeatherFetcher fetcher =
                 new WeatherFetcher(today, days, longitude, latitude);
 

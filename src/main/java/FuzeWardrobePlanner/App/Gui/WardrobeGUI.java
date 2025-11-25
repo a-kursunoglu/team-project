@@ -34,7 +34,7 @@ public class WardrobeGUI {
         Wardrobe wardrobe = new Wardrobe();
 
         wardrobe.addItem(new ClothingArticle(
-                "Hoodie", "TOPS", 2, false, new Photo("placeholder.jpg")   // put real photo here later
+                "Hoodie", "TOPS", 2, false, new Photo("placeholder.jpg")
         ));
         wardrobe.addItem(new ClothingArticle(
                 "Jacket", "OUTERWEAR", 3, true, new Photo("placeholder.jpg")
@@ -43,7 +43,6 @@ public class WardrobeGUI {
                 "Jacket2", "OUTERWEAR", 3, true, new Photo("placeholder.jpg")
         ));
 
-        // Demo launcher: use a file-backed repo in user home
         String path = java.nio.file.Paths.get(System.getProperty("user.home"), ".fuzewardrobe", "wardrobe.json").toString();
         FuzeWardrobePlanner.Entity.Clothing.JsonWardrobeRepository repo =
                 new FuzeWardrobePlanner.Entity.Clothing.JsonWardrobeRepository(path);
