@@ -268,27 +268,31 @@ public class MainPage extends JFrame {
             return;
         }
         Set<String> prevNames = new HashSet<>();
+        Outfit previousOutfit = null;
         for (int i = 0; i < 7; i++) {
             WeatherDay day = week.getWeatherDay(i);
             if (day == null) continue;
-            Outfit outfit = generateOutfitWithNoRepeat(day, wardrobeMap, prevNames);
+            Outfit outfit = generateOutfitWithNoRepeat(day, wardrobeMap, prevNames, previousOutfit);
             day.setOutfit(outfit);
             prevNames = extractNames(outfit);
+            previousOutfit = outfit;
         }
     }
 
     private Outfit generateOutfitWithNoRepeat(WeatherDay day,
                                               Map<String, List<ClothingArticle>> wardrobeMap,
-                                              Set<String> previousNames) {
+                                              Set<String> previousNames,
+                                              Outfit previousOutfit) {
         Outfit first = outfitCreator.createOutfitForDay(day, shuffledCopy(wardrobeMap), false);
         if (first == null) return null;
-        if (!isSameTopOrBottom(first, previousNames)) {
+        if (!isSameTopOrBottom(first, previousNames) && !isSameOutfit(first, previousOutfit)) {
             return first;
         }
 
         for (int attempt = 0; attempt < 4; attempt++) {
             Outfit candidate = outfitCreator.createOutfitForDay(day, shuffledCopy(wardrobeMap), false);
-            if (candidate != null && !isSameTopOrBottom(candidate, previousNames)) {
+            if (candidate != null && !isSameTopOrBottom(candidate, previousNames)
+                    && !isSameOutfit(candidate, previousOutfit)) {
                 return candidate;
             }
         }
@@ -304,7 +308,10 @@ public class MainPage extends JFrame {
             filtered.put(entry.getKey(), list);
         }
         Outfit lastTry = outfitCreator.createOutfitForDay(day, filtered, false);
-        return lastTry != null ? lastTry : first;
+        if (lastTry != null && !isSameOutfit(lastTry, previousOutfit)) {
+            return lastTry;
+        }
+        return first;
     }
 
     private Map<String, List<ClothingArticle>> shuffledCopy(Map<String, List<ClothingArticle>> original) {
@@ -337,6 +344,34 @@ public class MainPage extends JFrame {
             }
         }
         return names;
+    }
+
+    /**
+     * Returns true if both outfits use the same named items for every slot.
+     * A null outfit never matches another outfit.
+     */
+    private boolean isSameOutfit(Outfit a, Outfit b) {
+        if (a == null || b == null) {
+            return false;
+        }
+        Map<String, ClothingArticle> itemsA = a.getItems();
+        Map<String, ClothingArticle> itemsB = b.getItems();
+        if (itemsA == null || itemsB == null) {
+            return false;
+        }
+        if (!itemsA.keySet().equals(itemsB.keySet())) {
+            return false;
+        }
+        for (String key : itemsA.keySet()) {
+            ClothingArticle articleA = itemsA.get(key);
+            ClothingArticle articleB = itemsB.get(key);
+            String nameA = articleA != null ? articleA.getName() : null;
+            String nameB = articleB != null ? articleB.getName() : null;
+            if (!Objects.equals(nameA, nameB)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private Map<String, List<ClothingArticle>> buildWardrobeMap(List<ClothingArticle> items) {
