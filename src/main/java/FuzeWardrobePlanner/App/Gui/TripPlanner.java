@@ -57,7 +57,7 @@ public class TripPlanner extends JFrame {
                 : new String[]{"Toronto Canada", "New York", "Vancouver"};
         initUi();
     }
-
+    
     private void initUi() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
@@ -125,6 +125,9 @@ public class TripPlanner extends JFrame {
         JLabel formatHint = new JLabel("Date format: yyyy-mm-dd");
         formatHint.setFont(formatHint.getFont().deriveFont(Font.ITALIC, 11f));
         form.add(formatHint);
+        JLabel forecastLimitHint = new JLabel("Note: Trips can only be planned up to ~2 weeks ahead (forecast limit).");
+        forecastLimitHint.setFont(forecastLimitHint.getFont().deriveFont(Font.ITALIC, 11f));
+        form.add(forecastLimitHint);
 
         form.add(Box.createVerticalStrut(10));
         form.add(label("Outfits Needed (7 max):"));
