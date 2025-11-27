@@ -27,6 +27,11 @@ public class TripPlannerUI extends JFrame {
 
     private final String[] availableCities;
 
+    /**
+     * Note for whomever reads this:
+     * The code for this and TripPlannerInteractor used to be all together.
+     * This should be a good fix to have a cleaner architecture.
+     */
     public TripPlannerUI(TripPlannerInteractor service,
                          String[] cities) {
 

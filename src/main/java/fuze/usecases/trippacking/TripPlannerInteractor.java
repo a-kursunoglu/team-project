@@ -23,7 +23,10 @@ public class TripPlannerInteractor {
         this.outfitCreator = creator != null ? creator : new OutfitCreator();
     }
 
-    /** Validate date strings and return LocalDates **/
+    /**
+     * Handles which dates are valid, i.e. whether start date is before end date
+     * and if dates are in proper format
+     **/
     public LocalDate[] validateDates(String start, String end) throws IllegalArgumentException {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -40,8 +43,12 @@ public class TripPlannerInteractor {
         }
     }
 
-    /** Generate the full list of WeatherDay objects for the trip **/
+    /** Generate the full list of WeatherDay objects for the trip
+     * based on WeatherTrip. This is really to only be used by the UI
+     **/
     public List<WeatherDay> generateTripPlan(String location, LocalDate start, int days) {
+        // Creating the actual trip from the WeatherTrip, which helps handle API
+        // calls and weather stuff.
         WeatherTrip trip = new WeatherTrip(location, start.toString(), days);
         Map<String, List<ClothingArticle>> wardrobeMap =
                 buildWardrobeMap(wardrobeRepository != null ? wardrobeRepository.getAll() : List.of());
@@ -63,7 +70,6 @@ public class TripPlannerInteractor {
         return result;
     }
 
-    /** ---- All your existing logic goes here ---- */
 
     private Map<String, List<ClothingArticle>> buildWardrobeMap(List<ClothingArticle> items) {
         Map<String, List<ClothingArticle>> map = new HashMap<>();
@@ -133,6 +139,7 @@ public class TripPlannerInteractor {
         return (top != null && previousNames.contains(top.getName())) &&
                 (bottom != null && previousNames.contains(bottom.getName()));
     }
+
 
     private Set<String> extractNames(Outfit outfit) {
         Set<String> names = new HashSet<>();
