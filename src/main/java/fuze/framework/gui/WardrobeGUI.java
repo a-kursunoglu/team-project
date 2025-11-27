@@ -11,6 +11,11 @@ import fuze.usecases.managewardrobe.ManageWardrobeInteractor;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * A GUI window that displays the user's wardrobe.
+ * It initializes a frame, connects it to the ManageWardrobeInteractor,
+ * and shows all wardrobe items inside a scrollable panel.
+ */
 public class WardrobeGUI {
     private final JFrame frame;
 
