@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c7620808-9e8a-41e0-90c7-e2d220ceea3b" name="Changes" comment="re-organize ManageWardrobeInteractorTest">
-      <change afterPath="$PROJECT_DIR$/src/test/java/managewardrobe/WardrobeRepositoryTest.java" afterDir="false" />
+    <list default="true" id="c7620808-9e8a-41e0-90c7-e2d220ceea3b" name="Changes" comment="deletion">
+      <change afterPath="$PROJECT_DIR$/src/test/java/fuze/usecases/viewweather/ViewWeatherTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/ClothingTile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/ClothingTile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/WardrobeGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/WardrobeGUI.java" afterDir="false" />
@@ -24,6 +24,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="jadenToSeparateTripPlanner" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
@@ -41,7 +44,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/a-kursunoglu/team-project.git&quot;,
-    &quot;accountId&quot;: &quot;dbfc566a-8700-4088-a725-695df3cb7f5e&quot;
+    &quot;accountId&quot;: &quot;84e38197-e51f-4110-ba4f-1e9a0ff82893&quot;
   },
   &quot;recentNewPullRequestHead&quot;: {
     &quot;server&quot;: {
@@ -64,11 +67,10 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Main.executor": "Run",
-    "Application.MainPage.executor": "Run",
+    "Application.Main.executor": "Debug",
+    "Application.fuze.app.Main.executor": "Run",
     "Application.tempCheckLocationString.executor": "Run",
-    "JUnit.ManageWardrobeInteractorTest.executor": "Run",
-    "JUnit.WardrobeRepositoryTest.executor": "Run",
+    "JUnit.ViewWeatherTest.executor": "Coverage",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
@@ -91,7 +93,7 @@
       <recent name="managewardrobe" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.ViewWeatherTest">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="FuzeWardrobePlanner.App.Main" />
       <module name="TeamProject" />
@@ -101,6 +103,34 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="fuze.app.Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="fuze.app.Main" />
+      <module name="TeamProject" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fuze.app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ViewWeatherTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="TeamProject" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fuze.usecases.viewweather.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fuze.usecases.viewweather" />
+      <option name="MAIN_CLASS_NAME" value="fuze.usecases.viewweather.ViewWeatherTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -118,6 +148,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ViewWeatherTest" />
+        <item itemvalue="Application.fuze.app.Main" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
