@@ -2,8 +2,15 @@ package fuze.entity.location;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * IMPORTANT TO WHOEVER IMPLEMENTS THIS:
@@ -61,54 +68,68 @@ public class LocationStringToCoordinate {
      * @return Returns an array of strings with every possible city
      */
     public String[] getCities() {
-        String[] strings = new String[89];
-        int i = 0;
-        try {
-            BufferedReader br = new BufferedReader(
-                    new FileReader("src/main/java/FuzeWardrobePlanner" +
-                            "/Entity/Weather/cityCoordinates/CitiesLongLat.csv"));
+        List<String> cities = new ArrayList<>();
+        try (BufferedReader br = openCityReader()) {
             String line;
+            boolean firstLine = true;
             while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (i != 0) {
-                    strings[i - 1] = values[1];
+                if (firstLine) {
+                    firstLine = false;
+                    continue;
                 }
-                i++;
+                String[] values = line.split(",");
+                if (values.length > 1) {
+                    cities.add(values[1]);
+                }
             }
-            br.close();
-        }catch (FileNotFoundException e){
-            return null;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return new String[]{"Toronto Canada", "New York", "Vancouver"};
         }
-        return strings;
+        return cities.toArray(new String[0]);
     }
 
 
     private double[] stringToCoord(String city){
-        Double longitudeResult = -79.3733;
-        Double latitudeResult = 43.7417;
-        try {
-            BufferedReader br = new BufferedReader(
-                    new FileReader("src/main/java/FuzeWardrobePlanner" +
-                            "/Entity/Weather/cityCoordinates/CitiesLongLat.csv"));
+        double longitudeResult = -79.3733;
+        double latitudeResult = 43.7417;
+        try (BufferedReader br = openCityReader()) {
             String line;
+            boolean firstLine = true;
             while ((line = br.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue;
+                }
                 String[] values = line.split(",");
-                if (values[0].equals(city)){
+                if (values.length > 3 && values[0].equals(city)) {
                     longitudeResult = Double.parseDouble(values[3]);
                     latitudeResult = Double.parseDouble(values[2]);
                     break;
                 }
             }
-            br.close();
-        }catch (FileNotFoundException e){
-            return null;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return new double[]{longitudeResult, latitudeResult};
         }
-        double[] location = new double[]{longitudeResult, latitudeResult};
-        return location;
+        return new double[]{longitudeResult, latitudeResult};
 
+    }
+
+    /**
+     * Opens a reader for the city CSV regardless of where the app is launched
+     * from. Tries the project path first, then falls back to the classpath.
+     */
+    private BufferedReader openCityReader() throws IOException {
+        Path projectPath = Paths.get("src", "main", "java", "fuze", "entity",
+                "location", "city_coordinates", "CitiesLongLat.csv");
+        if (Files.exists(projectPath)) {
+            return Files.newBufferedReader(projectPath, StandardCharsets.UTF_8);
+        }
+        InputStream stream = LocationStringToCoordinate.class
+                .getClassLoader()
+                .getResourceAsStream("fuze/entity/location/city_coordinates/CitiesLongLat.csv");
+        if (stream != null) {
+            return new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
+        }
+        throw new FileNotFoundException("CitiesLongLat.csv not found");
     }
 }
