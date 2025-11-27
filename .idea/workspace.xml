@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c7620808-9e8a-41e0-90c7-e2d220ceea3b" name="Changes" comment="deletion">
-      <change afterPath="$PROJECT_DIR$/src/test/java/fuze/usecases/viewweather/ViewWeatherTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/fuze/usecases/generateoutfit/OutfitCreatorTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/ClothingTile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/ClothingTile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/WardrobeGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/WardrobeGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/WardrobePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/WardrobePanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fuze/usecases/managewardrobe/ManageWardrobeInteractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/usecases/managewardrobe/ManageWardrobeInteractor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fuze/usecases/generateoutfit/OutfitCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/usecases/generateoutfit/OutfitCreator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +54,9 @@
     &quot;repository&quot;: &quot;team-project&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -70,13 +70,14 @@
     "Application.Main.executor": "Debug",
     "Application.fuze.app.Main.executor": "Run",
     "Application.tempCheckLocationString.executor": "Run",
+    "JUnit.OutfitCreatorTest.executor": "Coverage",
     "JUnit.ViewWeatherTest.executor": "Coverage",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "git-widget-placeholder": "wardroberepositoryTest",
+    "git-widget-placeholder": "Two-usecases-test",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_directory_selection": "/Users/chang-yeyun/IdeaProjects/team-project/src/test/java/managewardrobe",
@@ -93,7 +94,7 @@
       <recent name="managewardrobe" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ViewWeatherTest">
+  <component name="RunManager" selected="JUnit.OutfitCreatorTest">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="FuzeWardrobePlanner.App.Main" />
       <module name="TeamProject" />
@@ -116,6 +117,22 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OutfitCreatorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="TeamProject" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fuze.usecases.generateoutfit.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fuze.usecases.generateoutfit" />
+      <option name="MAIN_CLASS_NAME" value="fuze.usecases.generateoutfit.OutfitCreatorTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -146,12 +163,17 @@
       <option name="filePath" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Application.fuze.app.Main" />
+      <item itemvalue="Application.Main" />
+      <item itemvalue="JUnit.OutfitCreatorTest" />
+      <item itemvalue="JUnit.ViewWeatherTest" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.OutfitCreatorTest" />
         <item itemvalue="JUnit.ViewWeatherTest" />
         <item itemvalue="Application.fuze.app.Main" />
-        <item itemvalue="Application.Main" />
-        <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
       </list>
@@ -322,5 +344,13 @@
     <MESSAGE value="ManageWardrobeInteractorTest" />
     <MESSAGE value="re-organize ManageWardrobeInteractorTest" />
     <option name="LAST_COMMIT_MESSAGE" value="re-organize ManageWardrobeInteractorTest" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/team_project$OutfitCreatorTest.ic" NAME="OutfitCreatorTest Coverage Results" MODIFIED="1764284602083" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>fuze.usecases.generateoutfit.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/team_project$ViewWeatherTest.ic" NAME="ViewWeatherTest Coverage Results" MODIFIED="1764281998556" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>fuze.usecases.viewweather.*</FILTER>
+    </SUITE>
   </component>
 </project>
