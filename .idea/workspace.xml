@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c7620808-9e8a-41e0-90c7-e2d220ceea3b" name="Changes" comment="deletion">
-      <change afterPath="$PROJECT_DIR$/src/test/java/ManageWardrobeInteractorTest.java" afterDir="false" />
+    <list default="true" id="c7620808-9e8a-41e0-90c7-e2d220ceea3b" name="Changes" comment="re-organize ManageWardrobeInteractorTest">
+      <change afterPath="$PROJECT_DIR$/src/test/java/managewardrobe/WardrobeRepositoryTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/ClothingTile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/ClothingTile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/WardrobeGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/WardrobeGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/WardrobePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/WardrobePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fuze/usecases/managewardrobe/ManageWardrobeInteractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/usecases/managewardrobe/ManageWardrobeInteractor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main1" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -65,21 +68,27 @@
     "Application.MainPage.executor": "Run",
     "Application.tempCheckLocationString.executor": "Run",
     "JUnit.ManageWardrobeInteractorTest.executor": "Run",
+    "JUnit.WardrobeRepositoryTest.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "wardroberepositoryTest",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
+    "last_directory_selection": "/Users/chang-yeyun/IdeaProjects/team-project/src/test/java/managewardrobe",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
     "to.speed.mode.migration.done": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/test/java" />
       <recent name="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/cityCoordinates" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="managewardrobe" />
     </key>
   </component>
   <component name="RunManager">
@@ -109,6 +118,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
@@ -210,7 +220,23 @@
       <option name="project" value="LOCAL" />
       <updated>1764027376401</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="ManageWardrobeInteractorTest">
+      <option name="closed" value="true" />
+      <created>1764214785707</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1764214785707</updated>
+    </task>
+    <task id="LOCAL-00012" summary="re-organize ManageWardrobeInteractorTest">
+      <option name="closed" value="true" />
+      <created>1764215028885</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1764215028885</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -261,6 +287,8 @@
     <MESSAGE value="Nate" />
     <MESSAGE value="Added LocationStringToCoordinate" />
     <MESSAGE value="deletion" />
-    <option name="LAST_COMMIT_MESSAGE" value="deletion" />
+    <MESSAGE value="ManageWardrobeInteractorTest" />
+    <MESSAGE value="re-organize ManageWardrobeInteractorTest" />
+    <option name="LAST_COMMIT_MESSAGE" value="re-organize ManageWardrobeInteractorTest" />
   </component>
 </project>

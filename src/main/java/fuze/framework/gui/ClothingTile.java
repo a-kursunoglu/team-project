@@ -5,7 +5,11 @@ import fuze.usecases.managewardrobe.ManageWardrobeInteractor;
 
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * A UI component that displays a single clothing item in the wardrobe.
+ * It shows the item's imgae and namd, and aloows the user to delete the item.
+ * After the deletion, a refresh callback is triggered to update the wardrobe view
+ */
 public class ClothingTile extends JPanel {
 
     public ClothingTile(ClothingArticle item, ManageWardrobeInteractor interactor, Runnable refreshCallback) {
