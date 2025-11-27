@@ -4,46 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c7620808-9e8a-41e0-90c7-e2d220ceea3b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/API/APIReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/weatherapi/APIReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/API/WeatherFetcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/weatherapi/WeatherFetcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/ClothingTile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/app/gui/ClothingTile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/app/gui/Config.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/MainPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/app/gui/MainPage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/TripPlanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/app/gui/TripPlanner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/UploadClothingPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/app/gui/UploadClothingPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/WardrobeGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/app/gui/WardrobeGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/WardrobePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/app/gui/WardrobePanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/WeatherGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/app/gui/WeatherGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Gui/WeeklyPlanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/app/gui/WeeklyPlanner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/App/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/app/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Clothing/ClothingArticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/entity/clothing/ClothingArticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Clothing/JsonWardrobeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/entity/clothing/JsonWardrobeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Clothing/Outfit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/entity/clothing/Outfit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Clothing/Photo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/entity/clothing/Photo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Clothing/Wardrobe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/entity/clothing/Wardrobe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Clothing/WardrobeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/entity/clothing/WardrobeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/LocationStringToCoordinate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/entity/location/LocationStringToCoordinate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/WeatherDay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/entity/weather/WeatherDay.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/WeatherDays.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/entity/weather/WeatherDays.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/WeatherTrip.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/entity/weather/WeatherTrip.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/WeatherWeek.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/entity/weather/WeatherWeek.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/cityCoordinates/CitiesLongLat.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/entity/location/city_coordinates/CitiesLongLat.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/ManageWardrobeInteractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/use_cases/ManageWardrobeInteractor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/OutfitCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/use_cases/generate_outfit/OutfitCreator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/SaveOutfits.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/framework/data/FileOutfitSaver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/UploadClothing/InMemoryWardrobeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/use_cases/upload_clothing/InMemoryWardrobeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/UploadClothing/UploadClothingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/use_cases/upload_clothing/UploadClothingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/UploadClothing/UploadClothingInputBoundary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/use_cases/upload_clothing/UploadClothingInputBoundary.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/UploadClothing/UploadClothingInputData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/use_cases/upload_clothing/UploadClothingInputData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/UploadClothing/UploadClothingInteractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/use_cases/upload_clothing/UploadClothingInteractor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/UploadClothing/UploadClothingOutputBoundary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/use_cases/upload_clothing/UploadClothingOutputBoundary.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/UploadClothing/UploadClothingOutputData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/use_cases/upload_clothing/UploadClothingOutputData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/UploadClothing/UploadClothingPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/use_cases/upload_clothing/UploadClothingPresenter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/UploadClothing/UploadClothingView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/use_cases/upload_clothing/UploadClothingView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/UserCases/ViewWeather.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/use_cases/view_weather/ViewWeather.java" afterDir="false" />
-    </list>
+    <list default="true" id="c7620808-9e8a-41e0-90c7-e2d220ceea3b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,7 +20,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="re-organizing" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -70,22 +31,22 @@
     &quot;assignee&quot;: &quot;NateAn481&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/a-kursunoglu/team-project.git&quot;,
-    &quot;accountId&quot;: &quot;84e38197-e51f-4110-ba4f-1e9a0ff82893&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/a-kursunoglu/team-project.git",
+    "accountId": "49740450-da60-4650-b610-5cce4bd3dc27"
   },
-  &quot;recentNewPullRequestHead&quot;: {
-    &quot;server&quot;: {
-      &quot;useHttp&quot;: false,
-      &quot;host&quot;: &quot;github.com&quot;,
-      &quot;port&quot;: null,
-      &quot;suffix&quot;: null
+  "recentNewPullRequestHead": {
+    "server": {
+      "useHttp": false,
+      "host": "github.com",
+      "port": null,
+      "suffix": null
     },
-    &quot;owner&quot;: &quot;a-kursunoglu&quot;,
-    &quot;repository&quot;: &quot;team-project&quot;
+    "owner": "a-kursunoglu",
+    "repository": "team-project"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -103,7 +64,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "git-widget-placeholder": "tests-userstory3",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }
@@ -123,11 +84,11 @@
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="fuze.app.Main" />
+      <option name="MAIN_CLASS_NAME" value="FuzeWardrobePlanner.App.Main" />
       <module name="TeamProject" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="fuze.app.*" />
+          <option name="PATTERN" value="FuzeWardrobePlanner.App.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -148,6 +109,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
@@ -233,7 +195,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763519668138</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="re-organized project to better fit clean architecture">
+      <option name="closed" value="true" />
+      <created>1764212089286</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1764212089286</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -243,6 +213,7 @@
     <MESSAGE value="sign" />
     <MESSAGE value="Nate" />
     <MESSAGE value="Added LocationStringToCoordinate" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added LocationStringToCoordinate" />
+    <MESSAGE value="re-organized project to better fit clean architecture" />
+    <option name="LAST_COMMIT_MESSAGE" value="re-organized project to better fit clean architecture" />
   </component>
 </project>
