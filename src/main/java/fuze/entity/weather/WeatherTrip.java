@@ -1,7 +1,7 @@
 package fuze.entity.weather;
 
 import fuze.entity.location.LocationStringToCoordinate;
-import fuze.weatherapi.WeatherFetcher;
+import fuze.framework.weatherapi.WeatherFetcher;
 import org.json.JSONArray;
 
 import java.util.Iterator;

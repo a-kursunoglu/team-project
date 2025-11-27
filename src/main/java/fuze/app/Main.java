@@ -1,6 +1,6 @@
 package fuze.app;
 
-import fuze.app.gui.MainPage;
+import fuze.framework.gui.MainPage;
 
 public class Main {
     public static void main(String[] args) {
