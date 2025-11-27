@@ -42,6 +42,13 @@ public class WeatherWeek extends WeatherDays{
         this.days = constructWeatherQueue();
     }
 
+    protected WeatherWeek(Queue<WeatherDay> days, String defaultLocationName) {
+        this.days = days != null ? days : new LinkedList<>();
+        this.defaultLocationName = defaultLocationName;
+        this.location = new double[]{0.0, 0.0};
+        this.weatherFetcher = null;
+    }
+
 
     /**
      * Constructs the actual Queue
@@ -81,6 +88,9 @@ public class WeatherWeek extends WeatherDays{
 
     @Override
     JSONArray getDays() {
+        if (this.weatherFetcher == null) {
+            return new JSONArray();
+        }
         return this.weatherFetcher.getForecastDates();
     }
 
