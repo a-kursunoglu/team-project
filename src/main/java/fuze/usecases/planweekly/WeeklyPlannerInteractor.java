@@ -60,9 +60,6 @@ public class WeeklyPlannerInteractor {
     }
 
     private boolean isWardrobeEmpty(Map<String, List<ClothingArticle>> wardrobeMap) {
-        if (wardrobeMap == null || wardrobeMap.isEmpty()) {
-            return true;
-        }
         for (List<ClothingArticle> items : wardrobeMap.values()) {
             if (items != null && !items.isEmpty()) {
                 return false;
