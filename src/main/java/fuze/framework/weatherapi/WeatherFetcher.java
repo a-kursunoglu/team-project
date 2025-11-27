@@ -85,7 +85,15 @@ public class WeatherFetcher {
     }
 
     public JSONArray getForecastDates() {
-        return weatherData.getJSONObject("daily").getJSONArray("time");
+        if (weatherData == null) {
+            return new JSONArray();
+        }
+        JSONObject daily = weatherData.optJSONObject("daily");
+        if (daily == null) {
+            return new JSONArray();
+        }
+        JSONArray time = daily.optJSONArray("time");
+        return time != null ? time : new JSONArray();
     }
 
     /**
@@ -97,8 +105,14 @@ public class WeatherFetcher {
         // TODO: handle the errors like wrong location or no weather data
         try{
             APIReader apiReader = new APIReader();
-            this.weatherData = apiReader.readAPI(this.longitude, this.latitude, this.startDate, this.forecastDays);
-            this.isDataLoaded = true;
+            JSONObject data = apiReader.readAPI(this.longitude, this.latitude, this.startDate, this.forecastDays);
+            if (data != null) {
+                this.weatherData = data;
+                this.isDataLoaded = true;
+            } else {
+                this.isDataLoaded = false;
+                this.weatherData = new JSONObject();
+            }
         }
         catch (Exception e){
             System.out.println("Error while loading weather data");
@@ -115,19 +129,30 @@ public class WeatherFetcher {
      * @return a WeatherDay entity for the given day
      */
     public WeatherDay getWeatherByDate(String date) {
+    if (!isDataLoaded || weatherData == null || !weatherData.has("daily")) {
+        return null;
+    }
     //Please refer to WeatherDay
     int i = 0;
-    while (i < this.forecastDays) {
-        String day = weatherData.getJSONObject("daily").getJSONArray("time").getString(i);
+    JSONObject daily = weatherData.getJSONObject("daily");
+    JSONArray time = daily.optJSONArray("time");
+    if (time == null) {
+        return null;
+    }
+    while (i < time.length() && i <= this.forecastDays) {
+        String day = time.optString(i, "");
         if (day.equals(date)) {
-            int weatherCondition = weatherData.getJSONObject("daily")
-                    .getJSONArray("weather_code").getInt(i);
-            double longitude = weatherData.getDouble("longitude");
-            double latitude = weatherData.getDouble("latitude");
-            double tempHigh = weatherData.getJSONObject("daily")
-                    .getJSONArray("temperature_2m_max").getDouble(i);
-            double tempLow = weatherData.getJSONObject("daily")
-                    .getJSONArray("temperature_2m_min").getDouble(i);
+            JSONArray codes = daily.optJSONArray("weather_code");
+            JSONArray highs = daily.optJSONArray("temperature_2m_max");
+            JSONArray lows = daily.optJSONArray("temperature_2m_min");
+            if (codes == null || highs == null || lows == null) {
+                return null;
+            }
+            int weatherCondition = codes.optInt(i);
+            double longitude = weatherData.optDouble("longitude");
+            double latitude = weatherData.optDouble("latitude");
+            double tempHigh = highs.optDouble(i);
+            double tempLow = lows.optDouble(i);
             double[] location = new double[]{longitude, latitude};
             WeatherDay weatherDay = new WeatherDay(weatherCondition, tempHigh, tempLow, location, date);
             return weatherDay;

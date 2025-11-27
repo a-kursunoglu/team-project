@@ -62,7 +62,10 @@ public class WeatherTrip extends WeatherDays{
         JSONArray dates = weatherFetcher.getForecastDates();
         Queue<WeatherDay> weatherQueue = new LinkedList<>();
         for (int i = 0; i < dates.length(); i++){
-            weatherQueue.add(weatherFetcher.getWeatherByDate(dates.getString(i)));
+            WeatherDay day = weatherFetcher.getWeatherByDate(dates.getString(i));
+            if (day != null) {
+                weatherQueue.add(day);
+            }
         }
         return weatherQueue;
     }
