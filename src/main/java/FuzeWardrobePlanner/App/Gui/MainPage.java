@@ -360,7 +360,7 @@ public class MainPage extends JFrame {
 
     private void openTripPlanner() {
         SwingUtilities.invokeLater(() -> {
-            TripPlanner planner = new TripPlanner(this::loadFromWeatherWeek, wardrobeRepository, outfitCreator, availableCities);
+            TripPlannerGui planner = new TripPlannerGui(this::loadFromWeatherWeek, wardrobeRepository, outfitCreator, availableCities);
             planner.setVisible(true);
         });
     }

@@ -4,9 +4,9 @@ import FuzeWardrobePlanner.Entity.Clothing.ClothingArticle;
 import FuzeWardrobePlanner.Entity.Clothing.Outfit;
 import FuzeWardrobePlanner.Entity.Clothing.WardrobeRepository;
 import FuzeWardrobePlanner.Entity.Weather.WeatherDay;
-import FuzeWardrobePlanner.Entity.Weather.WeatherTrip;
 import FuzeWardrobePlanner.Entity.Weather.WeatherWeek;
 import FuzeWardrobePlanner.UserCases.OutfitCreator;
+import FuzeWardrobePlanner.UserCases.TripPlanner;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -14,18 +14,13 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
-public class TripPlanner extends JFrame {
+public class TripPlannerGui extends JFrame {
 
     private JComboBox<String> locationDropdown;
     private JTextField startField;
@@ -39,15 +34,16 @@ public class TripPlanner extends JFrame {
     private final WardrobeRepository wardrobeRepository;
     private final OutfitCreator outfitCreator;
     private final String[] availableCities;
+    private final TripPlanner tripPlanner;
 
-    public TripPlanner() {
+    public TripPlannerGui() {
         this(null, null, null, null);
     }
 
-    public TripPlanner(Consumer<WeatherWeek> onBackToMain,
-                       WardrobeRepository wardrobeRepository,
-                       OutfitCreator outfitCreator,
-                       String[] availableCities) {
+    public TripPlannerGui(Consumer<WeatherWeek> onBackToMain,
+                          WardrobeRepository wardrobeRepository,
+                          OutfitCreator outfitCreator,
+                          String[] availableCities) {
         super("Trip Planner");
         this.onBackToMain = onBackToMain;
         this.wardrobeRepository = wardrobeRepository;
@@ -55,6 +51,7 @@ public class TripPlanner extends JFrame {
         this.availableCities = availableCities != null && availableCities.length > 0
                 ? availableCities
                 : new String[]{"Toronto Canada", "New York", "Vancouver"};
+        this.tripPlanner = new TripPlanner(wardrobeRepository, this.outfitCreator);
         initUi();
     }
     
@@ -196,33 +193,26 @@ public class TripPlanner extends JFrame {
         }
 
         int outfitsNeeded = Integer.parseInt(outfitsNeededDropdown.getSelectedItem().toString());
-        int days = Math.min(7, outfitsNeeded);
 
-        // Use WeatherTrip to fetch real weather for this trip
-        WeatherTrip trip = new WeatherTrip(loc, startDate.toString(), days);
-        Map<String, List<ClothingArticle>> wardrobeMap = buildWardrobeMap(
-                wardrobeRepository != null ? wardrobeRepository.getAll() : List.of()
-        );
-        Set<String> prevNames = new HashSet<>();
+        List<WeatherDay> plannedDays;
+        try {
+            plannedDays = tripPlanner.planTrip(loc, startDate, outfitsNeeded);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this,
+                    ex.getMessage(),
+                    "Unable to generate trip plan",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         if (daysPanel != null) {
             daysPanel.removeAll();
-            daysPanel.setLayout(new GridLayout(1, Math.max(1, days), 6, 6));
+            daysPanel.setLayout(new GridLayout(1, Math.max(1, plannedDays.size()), 6, 6));
         }
-        for (int i = 0; i < days; i++) {
-            WeatherDay day = trip.getWeatherDay(i);
-            if (day == null) {
-                LocalDate d = startDate.plusDays(i);
-                day = new WeatherDay(0, 0, 0, trip.getLocation(), d.toString());
-            } else {
-                Outfit outfit = wardrobeMap.isEmpty()
-                        ? null
-                        : generateOutfitWithNoRepeat(day, wardrobeMap, prevNames);
-                day.setOutfit(outfit);
-                prevNames = extractNames(outfit);
-            }
+        for (int i = 0; i < plannedDays.size(); i++) {
+            WeatherDay day = plannedDays.get(i);
             if (daysPanel != null) {
-                daysPanel.add(buildDayCard(day, day.getDate(), i + 1));
+                daysPanel.add(buildDayCard(day, day != null ? day.getDate() : null, i + 1));
             }
         }
 
@@ -230,93 +220,6 @@ public class TripPlanner extends JFrame {
             daysPanel.revalidate();
             daysPanel.repaint();
         }
-    }
-
-    private Map<String, List<ClothingArticle>> buildWardrobeMap(List<ClothingArticle> items) {
-        Map<String, List<ClothingArticle>> map = new HashMap<>();
-        map.put("top", new ArrayList<>());
-        map.put("bottom", new ArrayList<>());
-        map.put("outer", new ArrayList<>());
-        map.put("accessory", new ArrayList<>());
-
-        for (ClothingArticle item : items) {
-            if (item == null || item.getCategory() == null) continue;
-            String cat = item.getCategory().toLowerCase();
-            if (cat.contains("top")) {
-                map.get("top").add(item);
-            } else if (cat.contains("bottom") || cat.contains("pant") || cat.contains("bottoms")) {
-                map.get("bottom").add(item);
-            } else if (cat.contains("outer")) {
-                map.get("outer").add(item);
-            } else if (cat.contains("access")) {
-                map.get("accessory").add(item);
-            }
-        }
-        return map;
-    }
-
-    private Outfit generateOutfitWithNoRepeat(WeatherDay day,
-                                              Map<String, List<ClothingArticle>> wardrobeMap,
-                                              Set<String> previousNames) {
-        Outfit first = outfitCreator.createOutfitForDay(day, shuffledCopy(wardrobeMap), false);
-        if (first == null) return null;
-        if (!isSameTopOrBottom(first, previousNames)) {
-            return first;
-        }
-
-        for (int attempt = 0; attempt < 4; attempt++) {
-            Outfit candidate = outfitCreator.createOutfitForDay(day, shuffledCopy(wardrobeMap), false);
-            if (candidate != null && !isSameTopOrBottom(candidate, previousNames)) {
-                return candidate;
-            }
-        }
-
-        Map<String, List<ClothingArticle>> filtered = new HashMap<>();
-        for (Map.Entry<String, List<ClothingArticle>> entry : wardrobeMap.entrySet()) {
-            List<ClothingArticle> list = new ArrayList<>();
-            for (ClothingArticle item : entry.getValue()) {
-                if (item != null && (previousNames == null || !previousNames.contains(item.getName()))) {
-                    list.add(item);
-                }
-            }
-            filtered.put(entry.getKey(), list);
-        }
-        Outfit lastTry = outfitCreator.createOutfitForDay(day, filtered, false);
-        return lastTry != null ? lastTry : first;
-    }
-
-    private Map<String, List<ClothingArticle>> shuffledCopy(Map<String, List<ClothingArticle>> original) {
-        Map<String, List<ClothingArticle>> copy = new HashMap<>();
-        for (Map.Entry<String, List<ClothingArticle>> entry : original.entrySet()) {
-            List<ClothingArticle> list = new ArrayList<>(entry.getValue());
-            Collections.shuffle(list);
-            copy.put(entry.getKey(), list);
-        }
-        return copy;
-    }
-
-    private boolean isSameTopOrBottom(Outfit outfit, Set<String> previousNames) {
-        if (outfit == null || previousNames == null) return false;
-        Map<String, ClothingArticle> items = outfit.getItems();
-        if (items == null) return false;
-        ClothingArticle top = items.get("top");
-        ClothingArticle bottom = items.get("bottom");
-        boolean sameTop = top != null && top.getName() != null && previousNames.contains(top.getName());
-        boolean sameBottom = bottom != null && bottom.getName() != null && previousNames.contains(bottom.getName());
-        return sameTop && sameBottom;
-    }
-
-    private Set<String> extractNames(Outfit outfit) {
-        Set<String> names = new HashSet<>();
-        if (outfit == null || outfit.getItems() == null) {
-            return names;
-        }
-        for (ClothingArticle article : outfit.getItems().values()) {
-            if (article != null && article.getName() != null) {
-                names.add(article.getName());
-            }
-        }
-        return names;
     }
 
     private JPanel buildOutfitPanel(Outfit outfit) {
@@ -383,7 +286,7 @@ public class TripPlanner extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            TripPlanner planner = new TripPlanner(null, null, null, null);
+            TripPlannerGui planner = new TripPlannerGui(null, null, null, null);
             planner.setVisible(true);
         });
     }
