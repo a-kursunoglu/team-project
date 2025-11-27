@@ -1,3 +1,5 @@
+package managewardrobe;
+
 import fuze.entity.clothing.ClothingArticle;
 import fuze.entity.clothing.Photo;
 import fuze.usecases.managewardrobe.WardrobeRepository;
