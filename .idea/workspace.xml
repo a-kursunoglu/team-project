@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c7620808-9e8a-41e0-90c7-e2d220ceea3b" name="Changes" comment="deletion">
+      <change afterPath="$PROJECT_DIR$/src/test/java/fuze/usecases/viewweather/ViewWeatherTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/TripPlannerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/framework/gui/TripPlannerUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/fuze/usecases/trippacking/TripPlannerInteractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fuze/usecases/trippacking/TripPlannerInteractor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,12 +67,13 @@
     "Application.Main.executor": "Debug",
     "Application.fuze.app.Main.executor": "Run",
     "Application.tempCheckLocationString.executor": "Run",
+    "JUnit.ViewWeatherTest.executor": "Coverage",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "git-widget-placeholder": "CleaningUpAndRefactoringTrip",
+    "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
@@ -84,7 +85,7 @@
       <recent name="$PROJECT_DIR$/src/main/java/FuzeWardrobePlanner/Entity/Weather/cityCoordinates" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.fuze.app.Main">
+  <component name="RunManager" selected="JUnit.ViewWeatherTest">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="FuzeWardrobePlanner.App.Main" />
       <module name="TeamProject" />
@@ -111,6 +112,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ViewWeatherTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="TeamProject" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fuze.usecases.viewweather.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fuze.usecases.viewweather" />
+      <option name="MAIN_CLASS_NAME" value="fuze.usecases.viewweather.ViewWeatherTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="teamproject" />
       <method v="2">
@@ -124,6 +140,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ViewWeatherTest" />
         <item itemvalue="Application.fuze.app.Main" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
