@@ -13,12 +13,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-public class TripPlannerService {
+public class TripPlannerInteractor {
 
     private final WardrobeRepository wardrobeRepository;
     private final OutfitCreator outfitCreator;
 
-    public TripPlannerService(WardrobeRepository repo, OutfitCreator creator) {
+    public TripPlannerInteractor(WardrobeRepository repo, OutfitCreator creator) {
         this.wardrobeRepository = repo;
         this.outfitCreator = creator != null ? creator : new OutfitCreator();
     }

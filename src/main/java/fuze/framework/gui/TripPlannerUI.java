@@ -3,7 +3,7 @@ package fuze.framework.gui;
 import fuze.entity.clothing.ClothingArticle;
 import fuze.entity.clothing.Outfit;
 import fuze.entity.weather.WeatherDay;
-import fuze.usecases.trippacking.TripPlannerService;
+import fuze.usecases.trippacking.TripPlannerInteractor;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class TripPlannerUI extends JFrame {
 
-    private final TripPlannerService service;
+    private final TripPlannerInteractor service;
 
     private JComboBox<String> locationDropdown;
     private JTextField startField;
@@ -27,7 +27,7 @@ public class TripPlannerUI extends JFrame {
 
     private final String[] availableCities;
 
-    public TripPlannerUI(TripPlannerService service,
+    public TripPlannerUI(TripPlannerInteractor service,
                          String[] cities) {
 
         super("Trip Planner");

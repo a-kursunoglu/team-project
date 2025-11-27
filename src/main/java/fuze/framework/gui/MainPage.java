@@ -11,7 +11,7 @@ import fuze.entity.weather.WeatherDay;
 import fuze.entity.weather.WeatherWeek;
 import fuze.usecases.generateoutfit.OutfitCreator;
 import fuze.usecases.planweekly.WeeklyPlanner;
-import fuze.usecases.trippacking.TripPlannerService;
+import fuze.usecases.trippacking.TripPlannerInteractor;
 import fuze.usecases.uploadclothing.*;
 
 import javax.swing.*;
@@ -399,8 +399,8 @@ public class MainPage extends JFrame {
 
     private void openTripPlanner() {
         SwingUtilities.invokeLater(() -> {
-            TripPlannerService tripPlannerService = new TripPlannerService(wardrobeRepository, outfitCreator);
-            TripPlannerUI planner = new TripPlannerUI(tripPlannerService, availableCities);
+            TripPlannerInteractor tripPlannerInteractor = new TripPlannerInteractor(wardrobeRepository, outfitCreator);
+            TripPlannerUI planner = new TripPlannerUI(tripPlannerInteractor, availableCities);
             planner.setVisible(true);
         });
     }
