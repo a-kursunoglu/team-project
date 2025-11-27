@@ -57,6 +57,7 @@ public class TripPlanner extends JFrame {
                 : new String[]{"Toronto Canada", "New York", "Vancouver"};
         initUi();
     }
+    
     private void initUi() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
