@@ -1,4 +1,4 @@
-package fuze.framework.gui;
+package fuze.framework.gui.wardrobe;
 
 import fuze.entity.clothing.ClothingArticle;
 import fuze.entity.clothing.Photo;

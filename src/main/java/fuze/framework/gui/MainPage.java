@@ -3,6 +3,7 @@ package fuze.framework.gui;
 import fuze.entity.clothing.ClothingArticle;
 import fuze.entity.clothing.Outfit;
 import fuze.framework.data.JsonWardrobeRepository;
+import fuze.framework.gui.wardrobe.WardrobeGUI;
 import fuze.interfaceadapter.UploadClothingController;
 import fuze.interfaceadapter.UploadClothingPresenter;
 import fuze.usecases.managewardrobe.WardrobeRepository;
@@ -13,7 +14,8 @@ import fuze.usecases.generateoutfit.OutfitCreator;
 import fuze.usecases.planweekly.WeeklyPlannerInteractor;
 import fuze.usecases.planweekly.WeeklyPlanner;
 import fuze.usecases.trippacking.TripPlannerInteractor;
-import fuze.usecases.uploadclothing.*;
+import fuze.usecases.uploadclothing.UploadClothingInputBoundary;
+import fuze.usecases.uploadclothing.UploadClothingInteractor;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

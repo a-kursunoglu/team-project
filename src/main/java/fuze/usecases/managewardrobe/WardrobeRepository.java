@@ -8,5 +8,7 @@ public interface WardrobeRepository {
     void save(ClothingArticle article);
     boolean existsByName(String name);
     List<ClothingArticle> getAll();
-    void deleteByName(String name);
+    boolean deleteByName(String name);
+
+    boolean delete(String name);
 }
