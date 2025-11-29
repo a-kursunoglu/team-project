@@ -41,7 +41,7 @@ public class WardrobeRepositoryTest {
     void testDelete() {
         repo.save(new ClothingArticle("Hat", "ACCESSORY", 1, false, new Photo("hat.jpg")));
 
-        repo.delete("Hat");
+        repo.deleteByName("Hat");
 
         assertFalse(repo.existsByName("Hat"));
     }
@@ -58,7 +58,7 @@ public class WardrobeRepositoryTest {
 
     @Test
     void testDeleteNonExisting() {
-        boolean deleted = repo.delete("Ghost");
+        boolean deleted = repo.deleteByName("Ghost");
         assertFalse(deleted);
         assertTrue(repo.getAll().isEmpty());
     }
@@ -87,7 +87,7 @@ public class WardrobeRepositoryTest {
         repo.save(new ClothingArticle("B", "TOP", 1, false, new Photo("b.jpg")));
         repo.save(new ClothingArticle("C", "TOP", 1, false, new Photo("c.jpg")));
 
-        repo.delete("B");
+        repo.deleteByName("B");
 
         List<ClothingArticle> items = repo.getAll();
         assertEquals(2, items.size());
@@ -108,8 +108,8 @@ public class WardrobeRepositoryTest {
     void testDeleteTwice() {
         repo.save(new ClothingArticle("A", "TOP", 1, false, new Photo("a.jpg")));
 
-        assertTrue(repo.delete("A"));
-        assertFalse(repo.delete("A"));
+        assertTrue(repo.deleteByName("A"));
+        assertFalse(repo.deleteByName("A"));
         assertTrue(repo.getAll().isEmpty());
     }
 
@@ -137,7 +137,7 @@ public class WardrobeRepositoryTest {
         }
 
         for (int i = 0; i < 10; i++) {
-            repo.delete("Item" + i);
+            repo.deleteByName("Item" + i);
         }
 
         assertEquals(10, repo.getAll().size());
@@ -150,7 +150,7 @@ public class WardrobeRepositoryTest {
         }
 
         for (int i = 0; i < 15; i += 2) {
-            repo.delete("Item" + i);
+            repo.deleteByName("Item" + i);
         }
 
         assertTrue(repo.existsByName("Item1"));

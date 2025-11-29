@@ -26,7 +26,7 @@ public class InMemoryWardrobeRepository implements WardrobeRepository {
     }
 
     @Override
-    public void deleteByName(String name) {
-        storage.removeIf(item -> item.getName().equalsIgnoreCase(name));
+    public boolean deleteByName(String name) {
+        return storage.removeIf(item -> item.getName().equalsIgnoreCase(name));
     }
 }

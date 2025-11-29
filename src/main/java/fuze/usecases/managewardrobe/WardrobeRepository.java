@@ -9,6 +9,4 @@ public interface WardrobeRepository {
     boolean existsByName(String name);
     List<ClothingArticle> getAll();
     boolean deleteByName(String name);
-
-    boolean delete(String name);
 }
