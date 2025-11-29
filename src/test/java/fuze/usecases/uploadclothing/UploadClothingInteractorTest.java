@@ -118,7 +118,7 @@ public class UploadClothingInteractorTest {
         interactor.execute(input);
 
         ClothingArticle saved = repo.getAll().get(0);
-        assertEquals("shoes.png", saved.getImage().getPath());
+        assertEquals("shoes.png", saved.getImage().getFilePath());
     }
 
     private static class TestPresenter implements UploadClothingOutputBoundary {
