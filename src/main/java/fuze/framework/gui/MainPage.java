@@ -2,11 +2,11 @@ package fuze.framework.gui;
 
 import fuze.entity.clothing.ClothingArticle;
 import fuze.entity.clothing.Outfit;
-import fuze.framework.data.JsonWardrobeRepository;
 import fuze.framework.gui.wardrobe.WardrobeGUI;
 import fuze.interfaceadapter.UploadClothingController;
 import fuze.interfaceadapter.UploadClothingPresenter;
 import fuze.usecases.managewardrobe.WardrobeRepository;
+import fuze.framework.data.JsonWardrobeRepository;
 import fuze.entity.location.LocationStringToCoordinate;
 import fuze.entity.weather.WeatherDay;
 import fuze.entity.weather.WeatherWeek;
