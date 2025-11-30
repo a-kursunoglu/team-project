@@ -449,7 +449,8 @@ public class TripPlannerInteractorTest {
         }
 
         @Override
-        public void deleteByName(String name) {
+        public boolean deleteByName(String name) {
+            return false;
         }
     }
 
