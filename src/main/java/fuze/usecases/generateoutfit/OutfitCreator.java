@@ -14,7 +14,6 @@ import java.util.Map;
  * - optionally adds outer layer and accessory
  * - honors rain preference when possible (chooses waterproof items if rain)
  * - tries to match temperature using clothing weatherRating as a warmth score
- *
  * Assumptions:
  * - wardrobe is provided as Map with keys: "top", "bottom", "outer", "accessory"
  * - clothing weatherRating is an integer warmth score (higher = warmer)
@@ -124,9 +123,14 @@ public class OutfitCreator {
     }
 
     private ClothingArticle chooseOptional(List<ClothingArticle> options, int targetWarmth, boolean preferWaterproof) {
-        // Optional: only include if we have a decent match
-        return chooseBest(options, targetWarmth, preferWaterproof);
+        ClothingArticle candidate = chooseBest(options, targetWarmth, preferWaterproof);
+        if (candidate == null) {
+            return null;
+        }
+        int diff = Math.abs(candidate.getWeatherRating() - targetWarmth);
+        return diff <= 2 ? candidate : null;
     }
+
 
     private ClothingArticle chooseBestWaterproof(List<ClothingArticle> options) {
         if (options == null) return null;

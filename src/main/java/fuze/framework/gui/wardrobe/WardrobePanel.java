@@ -1,4 +1,4 @@
-package fuze.framework.gui;
+package fuze.framework.gui.wardrobe;
 
 import fuze.entity.clothing.ClothingArticle;
 import fuze.usecases.managewardrobe.ManageWardrobeInteractor;
@@ -7,6 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * A UI panel that displays the user's wardrobe organized into four categories:
+ * Tops, Bottoms, Outerwear, and Accessories.
+ * It rebuilds and refreshes its layout automatically whenever items are added or removed.
+ */
 public class WardrobePanel extends JPanel {
     private final ManageWardrobeInteractor interactor;
 
