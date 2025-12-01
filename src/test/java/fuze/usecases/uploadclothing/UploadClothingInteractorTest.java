@@ -4,6 +4,7 @@ import fuze.entity.clothing.ClothingArticle;
 import fuze.entity.clothing.Photo;
 import fuze.framework.data.InMemoryWardrobeRepository;
 import fuze.usecases.managewardrobe.WardrobeRepository;
+import fuze.usecases.uploadclothing.UploadClothingOutputData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -56,6 +57,22 @@ public class UploadClothingInteractorTest {
     }
 
     @Test
+    void testNullNameFails() {
+        UploadClothingInputData input = new UploadClothingInputData(
+                null,
+                "TOP",
+                2,
+                false,
+                "shirt.jpg"
+        );
+
+        interactor.execute(input);
+
+        assertTrue(presenter.failCalled);
+        assertEquals("Name cannot be empty.", presenter.errorMessage);
+    }
+
+    @Test
     void testDuplicateNameFails() {
         repo.save(new ClothingArticle("Shirt", "TOP", 2, false, new Photo("a.jpg")));
 
@@ -90,11 +107,43 @@ public class UploadClothingInteractorTest {
     }
 
     @Test
+    void testEmptyCategoryFails() {
+        UploadClothingInputData input = new UploadClothingInputData(
+                "Jacket",
+                "",
+                3,
+                true,
+                "jacket.jpg"
+        );
+
+        interactor.execute(input);
+
+        assertTrue(presenter.failCalled);
+        assertEquals("Category cannot be null.", presenter.errorMessage);
+    }
+
+    @Test
     void testInvalidWarmthFails() {
         UploadClothingInputData input = new UploadClothingInputData(
                 "Coat",
                 "OUTER",
                 -1,
+                false,
+                "coat.jpg"
+        );
+
+        interactor.execute(input);
+
+        assertTrue(presenter.failCalled);
+        assertEquals("Warmth level must be non-negative.", presenter.errorMessage);
+    }
+
+    @Test
+    void testTooHighWarmthFails() {
+        UploadClothingInputData input = new UploadClothingInputData(
+                "Coat",
+                "OUTER",
+                4,
                 false,
                 "coat.jpg"
         );
