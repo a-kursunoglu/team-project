@@ -16,6 +16,7 @@ import fuze.usecases.planweekly.WeeklyPlanner;
 import fuze.usecases.trippacking.TripPlannerInteractor;
 import fuze.usecases.uploadclothing.UploadClothingInputBoundary;
 import fuze.usecases.uploadclothing.UploadClothingInteractor;
+import fuze.usecases.viewweather.FutureWeatherGUI;   // 新增 import
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -103,18 +104,24 @@ public class MainPage extends JFrame {
         panel.add(temperatureLabel);
 
         panel.add(Box.createVerticalStrut(20));
+
+        JButton viewFutureWeatherButton = makeButton("View Future Weather"); // 新按钮
         JButton addTripButton = makeButton("Add Trip");
         JButton addClothingButton = makeButton("Add Clothing Item");
         JButton viewWardrobeButton = makeButton("View Wardrobe");
         JButton planWeekButton = makeButton("Plan for the Week");
         JButton refreshButton = makeButton("Refresh Outfit");
 
+        viewFutureWeatherButton.addActionListener(
+                e -> SwingUtilities.invokeLater(FutureWeatherGUI::new)
+        );
         addClothingButton.addActionListener(e -> openUploadClothingWindow());
         addTripButton.addActionListener(e -> openTripPlanner());
         viewWardrobeButton.addActionListener(e -> openWardrobeWindow());
         planWeekButton.addActionListener(e -> openWeeklyPlanner());
         refreshButton.addActionListener(e -> refreshOutfits());
 
+        panel.add(viewFutureWeatherButton);  // 放在 Add Trip 上面
         panel.add(addTripButton);
         panel.add(addClothingButton);
         panel.add(viewWardrobeButton);
