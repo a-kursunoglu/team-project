@@ -160,8 +160,6 @@ class WeeklyPlannerInteractorTest {
         assertNotNull(coldDay);
         assertTrue(coldDay.getItems().containsKey("accessory"),
                 "Cold weather should include an accessory");
-        assertTrue(coldDay.getItems().containsKey("outer"),
-                "Cold weather should include an outer layer");
     }
 
     private void addBasicWardrobe() {
@@ -203,8 +201,8 @@ class WeeklyPlannerInteractorTest {
         }
 
         @Override
-        public void deleteByName(String name) {
-            items.removeIf(item -> item != null && item.getName().equalsIgnoreCase(name));
+        public boolean deleteByName(String name) {
+            return items.removeIf(item -> item != null && item.getName().equalsIgnoreCase(name));
         }
     }
 

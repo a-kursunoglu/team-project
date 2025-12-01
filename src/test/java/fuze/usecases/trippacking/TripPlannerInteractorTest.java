@@ -17,7 +17,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class TripPlannerInteractorTest {
+class TripPlannerInteractorTest {
 
     @Test
     void validateDates_success() {
@@ -51,7 +51,7 @@ public class TripPlannerInteractorTest {
     @Test
     void generateTripPlan_usesWeatherTripAndOutfitCreator() {
         WeatherDay day = new WeatherDay(0, 20.0, 10.0, new double[]{1.0, 2.0}, "2025-01-01");
-        try (MockedConstruction<WeatherTrip> mockedTrip =
+        try (MockedConstruction<WeatherTrip> ignored =
                      mockConstruction(WeatherTrip.class, (mock, context) -> when(mock.getWeatherDay(0)).thenReturn(day))) {
 
             List<ClothingArticle> items = Arrays.asList(
@@ -73,9 +73,9 @@ public class TripPlannerInteractorTest {
     @Test
     void generateTripPlan_fallsBackToWeatherWeekWhenTripReturnsNull() {
         WeatherDay weekDay = new WeatherDay(0, 25.0, 15.0, new double[]{3.0, 4.0}, "2025-01-01");
-        try (MockedConstruction<WeatherTrip> mockedTrip =
+        try (MockedConstruction<WeatherTrip> ignored =
                      mockConstruction(WeatherTrip.class, (mock, context) -> when(mock.getWeatherDay(0)).thenReturn(null));
-             MockedConstruction<WeatherWeek> mockedWeek =
+             MockedConstruction<WeatherWeek> ignored1 =
                      mockConstruction(WeatherWeek.class, (mock, context) -> when(mock.getWeatherDay(0)).thenReturn(weekDay))) {
 
             TripPlannerInteractor interactor =
@@ -436,6 +436,7 @@ public class TripPlannerInteractorTest {
 
         @Override
         public void save(ClothingArticle article) {
+            items.add(article);
         }
 
         @Override
@@ -449,7 +450,8 @@ public class TripPlannerInteractorTest {
         }
 
         @Override
-        public void deleteByName(String name) {
+        public boolean deleteByName(String name) {
+            return false;
         }
     }
 

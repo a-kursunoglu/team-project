@@ -49,9 +49,12 @@ public class JsonWardrobeRepository implements WardrobeRepository {
     }
 
     @Override
-    public synchronized void deleteByName(String name) {
-        cache.removeIf(item -> item.getName().equalsIgnoreCase(name));
-        persist();
+    public synchronized boolean deleteByName(String name) {
+        boolean removed = cache.removeIf(item -> item.getName().equalsIgnoreCase(name));
+        if (removed) {
+            persist();
+        }
+        return removed;
     }
 
     private void loadFromDisk() {
