@@ -10,9 +10,13 @@ import fuze.usecases.managewardrobe.WardrobeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -162,6 +166,71 @@ class WeeklyPlannerInteractorTest {
                 "Cold weather should include an accessory");
     }
 
+    @Test
+    void nullOutfitFromCreator_leavesDayUnset() {
+        Photo placeholder = new Photo("");
+        wardrobe.save(new ClothingArticle("Topper", "top", 1, false, placeholder));
+        wardrobe.save(new ClothingArticle("Pants", "pant", 1, false, placeholder));
+        WeeklyPlannerInteractor customInteractor = new WeeklyPlannerInteractor(
+                wardrobe, new SequenceOutfitCreator(List.of((Outfit) null)));
+
+        WeatherDay[] days = buildDays(1);
+        WeatherWeek week = new FakeWeatherWeek(days, "Null City");
+
+        customInteractor.generateOutfitsForWeek(week);
+
+        assertNull(days[0].getOutfit(), "Outfit should stay null when creator returns null");
+    }
+
+    @Test
+    void repeatOutfitTriggersRetry() {
+        Photo placeholder = new Photo("");
+        ClothingArticle topPrimary = new ClothingArticle("TopPrimary", "top", 2, false, placeholder);
+        ClothingArticle bottomPrimary = new ClothingArticle("BottomPrimary", "pant", 2, false, placeholder);
+        ClothingArticle topAlt = new ClothingArticle("TopAlt", "top", 2, false, placeholder);
+        ClothingArticle bottomAlt = new ClothingArticle("BottomAlt", "pant", 2, false, placeholder);
+        wardrobe.save(topPrimary);
+        wardrobe.save(bottomPrimary);
+        wardrobe.save(topAlt);
+        wardrobe.save(bottomAlt);
+
+        Outfit first = buildOutfit("First", topPrimary, bottomPrimary);
+        Outfit alternate = buildOutfit("Alt", topAlt, bottomAlt);
+        WeeklyPlannerInteractor customInteractor = new WeeklyPlannerInteractor(
+                wardrobe, new SequenceOutfitCreator(Arrays.asList(first, first, alternate)));
+
+        WeatherDay[] days = buildDays(2);
+        WeatherWeek week = new FakeWeatherWeek(days, "Retry City");
+
+        customInteractor.generateOutfitsForWeek(week);
+
+        assertSame(first, days[0].getOutfit(), "First day uses initial outfit");
+        assertSame(alternate, days[1].getOutfit(), "Second day should switch to alternate outfit");
+    }
+
+    @Test
+    void fallbackReturnsFirstWhenAllCandidatesRepeat() {
+        Photo placeholder = new Photo("");
+        ClothingArticle top = new ClothingArticle("RepeatTop", "top", 2, false, placeholder);
+        ClothingArticle bottom = new ClothingArticle("RepeatBottom", "pant", 2, false, placeholder);
+        wardrobe.save(top);
+        wardrobe.save(bottom);
+
+        Outfit repeat = buildOutfit("Repeat", top, bottom);
+        List<Outfit> sequence = Arrays.asList(
+                repeat, repeat, repeat, repeat, repeat, repeat, repeat
+        );
+        WeeklyPlannerInteractor customInteractor = new WeeklyPlannerInteractor(
+                wardrobe, new SequenceOutfitCreator(sequence));
+
+        WeatherDay[] days = buildDays(2);
+        WeatherWeek week = new FakeWeatherWeek(days, "Repeat City");
+
+        customInteractor.generateOutfitsForWeek(week);
+
+        assertSame(repeat, days[1].getOutfit(), "When all retries fail, interactor reuses the first outfit");
+    }
+
     private void addBasicWardrobe() {
         Photo placeholder = new Photo("");
         wardrobe.save(new ClothingArticle("TopOne", "top", 2, false, placeholder));
@@ -180,6 +249,13 @@ class WeeklyPlannerInteractorTest {
 
     private WeatherDay makeDay(double high, double low, String date) {
         return new WeatherDay(0, high, low, new double[]{0.0, 0.0}, date);
+    }
+
+    private Outfit buildOutfit(String title, ClothingArticle top, ClothingArticle bottom) {
+        Map<String, ClothingArticle> items = new HashMap<>();
+        items.put("top", top);
+        items.put("bottom", bottom);
+        return new Outfit(items, title, 0, false);
     }
 
     private static class FakeWardrobeRepository implements WardrobeRepository {
@@ -203,6 +279,20 @@ class WeeklyPlannerInteractorTest {
         @Override
         public boolean deleteByName(String name) {
             return items.removeIf(item -> item != null && item.getName().equalsIgnoreCase(name));
+        }
+    }
+
+    private static class SequenceOutfitCreator extends OutfitCreator {
+        private final Queue<Outfit> queue;
+
+        SequenceOutfitCreator(List<Outfit> outfits) {
+            this.queue = new ArrayDeque<>(outfits);
+        }
+
+        @Override
+        public Outfit createOutfitForDay(WeatherDay day, Map<String, List<ClothingArticle>> wardrobe,
+                                         boolean isRainingOverride) {
+            return queue.isEmpty() ? null : queue.poll();
         }
     }
 
