@@ -5,17 +5,10 @@ import fuze.entity.weather.WeatherDay;
 
 import java.time.LocalDate;
 
-/**
- * ViewWeather: Displays today's weather (high, low, weather) based on location.
- * If user does NOT provide coordinates → use default Toronto weather.
- * If user DOES provide coordinates → fetch weather for that location.
- */
+
 public class ViewWeather {
 
-    /**
-     * Case 1: User did NOT provide latitude/longitude
-     * → use WeatherFetcher's default constructor (Toronto)
-     */
+
     public void displayToday() {
         WeatherFetcher fetcher = new WeatherFetcher();   // default: Toronto
         String today = LocalDate.now().toString();
@@ -30,9 +23,7 @@ public class ViewWeather {
         printWeather(day);
     }
 
-    /**
-     * Case 2: User provided latitude & longitude
-     */
+
     public void displayToday(double latitude, double longitude) {
 
         String today = LocalDate.now().toString();
@@ -51,9 +42,7 @@ public class ViewWeather {
         printWeather(day);
     }
 
-    /**
-     * Helper: prints WeatherDay information nicely
-     */
+
     private void printWeather(WeatherDay day) {
         System.out.println("======== Today's Weather ========");
         System.out.println("Date: " + day.getDate());
