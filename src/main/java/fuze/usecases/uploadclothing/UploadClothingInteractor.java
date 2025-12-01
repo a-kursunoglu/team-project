@@ -31,7 +31,7 @@ public class UploadClothingInteractor implements UploadClothingInputBoundary {
         }
         int warmth = inputData.getWeatherRating();
 
-        if (warmth < 1 || warmth > 3) {
+        if (warmth < 1 || warmth > 5) {
             presenter.prepareFailView("Warmth level must be non-negative.");
             return;
         }
