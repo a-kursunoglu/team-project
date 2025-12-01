@@ -4,6 +4,7 @@ import fuze.entity.clothing.ClothingArticle;
 import fuze.entity.clothing.Photo;
 import fuze.framework.data.InMemoryWardrobeRepository;
 import fuze.usecases.managewardrobe.WardrobeRepository;
+import fuze.usecases.uploadclothing.UploadClothingOutputData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

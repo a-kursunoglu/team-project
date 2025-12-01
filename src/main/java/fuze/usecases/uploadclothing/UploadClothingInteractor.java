@@ -25,6 +25,16 @@ public class UploadClothingInteractor implements UploadClothingInputBoundary {
             presenter.prepareFailView("A clothing item with this name already exists.");
             return;
         }
+        if (inputData.getCategory() == null || inputData.getCategory().isEmpty()) {
+            presenter.prepareFailView("Category cannot be null.");
+            return;
+        }
+        int warmth = inputData.getWeatherRating();
+
+        if (warmth < 1 || warmth > 3) {
+            presenter.prepareFailView("Warmth level must be non-negative.");
+            return;
+        }
         Photo photo = new Photo(inputData.getFilePath());
 
         ClothingArticle article = new ClothingArticle(

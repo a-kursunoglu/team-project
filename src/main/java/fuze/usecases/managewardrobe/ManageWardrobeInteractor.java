@@ -17,8 +17,10 @@ public class ManageWardrobeInteractor {
     }
 
     public boolean deleteItem(String name) {
-        repository.deleteByName(name);
-        return true;
+        if (name == null || name.isBlank()) {
+            return false;
+        }
+        return repository.deleteByName(name);
     }
 
     public List<ClothingArticle> viewWardrobe() {

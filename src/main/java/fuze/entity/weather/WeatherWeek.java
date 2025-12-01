@@ -1,6 +1,7 @@
 package fuze.entity.weather;
 
-import fuze.entity.location.LocationStringToCoordinate;
+import
+        fuze.entity.location.LocationStringToCoordinate;
 import fuze.framework.weatherapi.WeatherFetcher;
 import org.json.JSONArray;
 
