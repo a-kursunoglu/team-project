@@ -51,7 +51,6 @@ public class FutureWeatherGUI extends JFrame {
         Object selected = cityBox.getEditor().getItem();
         String city = (selected == null ? "" : selected.toString().trim());
 
-        // 这里约定：如果用户没填，就用默认 Toronto Canada
         String displayCity = city.isEmpty() ? "Toronto Canada" : city;
 
         List<WeatherDay> list = interactor.getTwoweeksWeather(city);
