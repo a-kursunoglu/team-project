@@ -1,0 +1,279 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > WeeklyPlanner</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">fuze.usecases.planweekly</a>
+</div>
+
+<h1>Coverage Summary for Class: WeeklyPlanner (fuze.usecases.planweekly)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">WeeklyPlanner</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/46)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/80)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package fuze.usecases.planweekly;
+&nbsp;
+&nbsp;import fuze.entity.clothing.ClothingArticle;
+&nbsp;import fuze.entity.clothing.Outfit;
+&nbsp;import fuze.entity.clothing.Photo;
+&nbsp;import fuze.entity.weather.WeatherDay;
+&nbsp;import fuze.entity.weather.WeatherWeek;
+&nbsp;
+&nbsp;import javax.swing.*;
+&nbsp;import javax.swing.border.LineBorder;
+&nbsp;import java.awt.*;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;/**
+&nbsp; * Calendar-like weekly view showing date, average temperature, and recommended outfit with images.
+&nbsp; */
+&nbsp;public class WeeklyPlanner extends JFrame {
+&nbsp;
+&nbsp;    private JLabel locationLabel;
+&nbsp;    private JPanel daysPanel;
+&nbsp;
+&nbsp;    public WeeklyPlanner() {
+<b class="nc">&nbsp;        super(&quot;Weekly Planner&quot;);</b>
+<b class="nc">&nbsp;        initUi();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void initUi() {
+<b class="nc">&nbsp;        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);</b>
+<b class="nc">&nbsp;        setLayout(new BorderLayout(8, 8));</b>
+&nbsp;
+&nbsp;        // Left: location label
+<b class="nc">&nbsp;        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));</b>
+<b class="nc">&nbsp;        locationLabel = new JLabel(&quot;Location: -&quot;);</b>
+<b class="nc">&nbsp;        locationLabel.setFont(locationLabel.getFont().deriveFont(Font.BOLD, 15f));</b>
+<b class="nc">&nbsp;        leftPanel.add(locationLabel);</b>
+<b class="nc">&nbsp;        add(leftPanel, BorderLayout.WEST);</b>
+&nbsp;
+&nbsp;        // Center: 7 columns representing each day
+<b class="nc">&nbsp;        daysPanel = new JPanel(new GridLayout(1, 7, 6, 6));</b>
+<b class="nc">&nbsp;        add(new JScrollPane(daysPanel,</b>
+&nbsp;                ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+&nbsp;                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+&nbsp;            BorderLayout.CENTER);
+&nbsp;
+<b class="nc">&nbsp;        setPreferredSize(new Dimension(1200, 350));</b>
+<b class="nc">&nbsp;        pack();</b>
+<b class="nc">&nbsp;        setLocationRelativeTo(null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Populate the grid with data from the given WeatherWeek (up to 7 days).
+&nbsp;     */
+&nbsp;    public void setWeatherWeek(WeatherWeek week) {
+<b class="nc">&nbsp;        String location = (week != null &amp;&amp; week.getDefaultLocation() != null)</b>
+<b class="nc">&nbsp;                ? week.getDefaultLocation()</b>
+<b class="nc">&nbsp;                : &quot;-&quot;;</b>
+<b class="nc">&nbsp;        locationLabel.setText(&quot;Location: &quot; + location);</b>
+&nbsp;
+<b class="nc">&nbsp;        daysPanel.removeAll();</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; 7; i++) {</b>
+<b class="nc">&nbsp;            WeatherDay day = (week != null) ? week.getWeatherDay(i) : null;</b>
+<b class="nc">&nbsp;            daysPanel.add(buildDayCard(day, i + 1));</b>
+&nbsp;        }
+<b class="nc">&nbsp;        daysPanel.revalidate();</b>
+<b class="nc">&nbsp;        daysPanel.repaint();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private JPanel buildDayCard(WeatherDay day, int index) {
+<b class="nc">&nbsp;        JPanel card = new JPanel();</b>
+<b class="nc">&nbsp;        card.setLayout(new BorderLayout(4, 4));</b>
+<b class="nc">&nbsp;        card.setBorder(BorderFactory.createTitledBorder(new LineBorder(Color.GRAY), &quot;Day &quot; + index));</b>
+&nbsp;
+&nbsp;        // Header with date and temperature
+<b class="nc">&nbsp;        JPanel header = new JPanel();</b>
+<b class="nc">&nbsp;        header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));</b>
+<b class="nc">&nbsp;        String dateText = day != null ? safe(day.getDate()) : &quot;date&quot; + index;</b>
+<b class="nc">&nbsp;        String tempText = day != null ? formatAvgTemp(day) : &quot;temp&quot; + index;</b>
+<b class="nc">&nbsp;        header.add(new JLabel(&quot;Date: &quot; + dateText));</b>
+<b class="nc">&nbsp;        header.add(new JLabel(&quot;Avg temp: &quot; + tempText));</b>
+<b class="nc">&nbsp;        card.add(header, BorderLayout.NORTH);</b>
+&nbsp;
+&nbsp;        // Outfit section
+<b class="nc">&nbsp;        JPanel outfitPanel = new JPanel();</b>
+<b class="nc">&nbsp;        outfitPanel.setLayout(new BoxLayout(outfitPanel, BoxLayout.Y_AXIS));</b>
+<b class="nc">&nbsp;        Outfit outfit = day != null ? day.getOutfit() : null;</b>
+<b class="nc">&nbsp;        if (outfit != null &amp;&amp; outfit.getItems() != null &amp;&amp; !outfit.getItems().isEmpty()) {</b>
+<b class="nc">&nbsp;            outfitPanel.add(new JLabel(&quot;Outfit: &quot; + safe(outfit.getTitle())));</b>
+&nbsp;
+<b class="nc">&nbsp;            JPanel itemsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));</b>
+<b class="nc">&nbsp;            for (Map.Entry&lt;String, ClothingArticle&gt; entry : outfit.getItems().entrySet()) {</b>
+<b class="nc">&nbsp;                itemsPanel.add(buildClothingBadge(entry.getKey(), entry.getValue()));</b>
+&nbsp;            }
+<b class="nc">&nbsp;            outfitPanel.add(itemsPanel);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            outfitPanel.add(new JLabel(&quot;Outfit: -&quot;));</b>
+&nbsp;        }
+<b class="nc">&nbsp;        card.add(outfitPanel, BorderLayout.CENTER);</b>
+&nbsp;
+<b class="nc">&nbsp;        return card;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private JPanel buildClothingBadge(String key, ClothingArticle article) {
+<b class="nc">&nbsp;        JPanel panel = new JPanel(new BorderLayout());</b>
+<b class="nc">&nbsp;        panel.setPreferredSize(new Dimension(120, 120));</b>
+<b class="nc">&nbsp;        panel.setBorder(new LineBorder(Color.LIGHT_GRAY));</b>
+&nbsp;
+<b class="nc">&nbsp;        JLabel nameLabel = new JLabel(key + &quot;: &quot; + (article != null ? safe(article.getName()) : &quot;-&quot;),</b>
+&nbsp;                SwingConstants.CENTER);
+<b class="nc">&nbsp;        nameLabel.setFont(nameLabel.getFont().deriveFont(Font.PLAIN, 11f));</b>
+<b class="nc">&nbsp;        panel.add(nameLabel, BorderLayout.NORTH);</b>
+&nbsp;
+<b class="nc">&nbsp;        JLabel imageLabel = new JLabel(&quot;&quot;, SwingConstants.CENTER);</b>
+<b class="nc">&nbsp;        if (article != null) {</b>
+<b class="nc">&nbsp;            ImageIcon icon = toIcon(article.getImage(), 90, 70);</b>
+<b class="nc">&nbsp;            if (icon != null) {</b>
+<b class="nc">&nbsp;                imageLabel.setIcon(icon);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                imageLabel.setText(&quot;No image&quot;);</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            imageLabel.setText(&quot;No image&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        panel.add(imageLabel, BorderLayout.CENTER);</b>
+&nbsp;
+<b class="nc">&nbsp;        return panel;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private ImageIcon toIcon(Photo photo, int maxW, int maxH) {
+<b class="nc">&nbsp;        if (photo == null) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        ImageIcon rawIcon = null;</b>
+<b class="nc">&nbsp;        if (photo.getJpegData() != null &amp;&amp; photo.getJpegData().length &gt; 0) {</b>
+<b class="nc">&nbsp;            rawIcon = new ImageIcon(photo.getJpegData());</b>
+<b class="nc">&nbsp;        } else if (photo.getFilePath() != null &amp;&amp; !photo.getFilePath().isEmpty()) {</b>
+<b class="nc">&nbsp;            rawIcon = new ImageIcon(photo.getFilePath());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (rawIcon == null || rawIcon.getIconWidth() &lt;= 0 || rawIcon.getIconHeight() &lt;= 0) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        Image scaled = rawIcon.getImage().getScaledInstance(maxW, maxH, Image.SCALE_SMOOTH);</b>
+<b class="nc">&nbsp;        return new ImageIcon(scaled);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private String formatAvgTemp(WeatherDay day) {
+<b class="nc">&nbsp;        double avg = (day.getTemperatureHigh() + day.getTemperatureLow()) / 2.0;</b>
+<b class="nc">&nbsp;        return Math.round(avg) + &quot;°&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private String safe(String value) {
+<b class="nc">&nbsp;        return value == null ? &quot;-&quot; : value;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void main(String[] args) {
+<b class="nc">&nbsp;        SwingUtilities.invokeLater(() -&gt; {</b>
+<b class="nc">&nbsp;            WeeklyPlanner planner = new WeeklyPlanner();</b>
+&nbsp;            // Sample load: populate from default WeatherWeek so location/slots are filled.
+<b class="nc">&nbsp;            WeatherWeek week = new WeatherWeek();</b>
+<b class="nc">&nbsp;            planner.setWeatherWeek(week);</b>
+<b class="nc">&nbsp;            planner.setVisible(true);</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-01 19:29</div>
+</div>
+</body>
+</html>

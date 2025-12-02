@@ -1,0 +1,304 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > WeeklyPlannerInteractor</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">fuze.usecases.planweekly</a>
+</div>
+
+<h1>Coverage Summary for Class: WeeklyPlannerInteractor (fuze.usecases.planweekly)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">WeeklyPlannerInteractor</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83%
+  </span>
+  <span class="absValue">
+    (88/106)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (92/92)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package fuze.usecases.planweekly;
+&nbsp;
+&nbsp;import fuze.entity.clothing.ClothingArticle;
+&nbsp;import fuze.entity.clothing.Outfit;
+&nbsp;import fuze.entity.weather.WeatherDay;
+&nbsp;import fuze.entity.weather.WeatherWeek;
+&nbsp;import fuze.usecases.generateoutfit.OutfitCreator;
+&nbsp;import fuze.usecases.managewardrobe.WardrobeRepository;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.Objects;
+&nbsp;import java.util.Set;
+&nbsp;
+&nbsp;/**
+&nbsp; * Use case interactor for planning weekly outfits.
+&nbsp; * Generates outfits for each day in a WeatherWeek while avoiding back-to-back duplicates.
+&nbsp; */
+&nbsp;public class WeeklyPlannerInteractor {
+&nbsp;
+&nbsp;    private final WardrobeRepository wardrobeRepository;
+&nbsp;    private final OutfitCreator outfitCreator;
+&nbsp;
+<b class="fc">&nbsp;    public WeeklyPlannerInteractor(WardrobeRepository wardrobeRepository, OutfitCreator outfitCreator) {</b>
+<b class="fc">&nbsp;        this.wardrobeRepository = wardrobeRepository;</b>
+<b class="fc">&nbsp;        this.outfitCreator = outfitCreator;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Generates outfits for each day in the provided WeatherWeek.
+&nbsp;     * Applies a no-repeat rule for consecutive days.
+&nbsp;     */
+&nbsp;    public void generateOutfitsForWeek(WeatherWeek week) {
+<b class="fc">&nbsp;        if (week == null) {</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        Map&lt;String, List&lt;ClothingArticle&gt;&gt; wardrobeMap = buildWardrobeMap(wardrobeRepository.getAll());</b>
+<b class="fc">&nbsp;        if (isWardrobeEmpty(wardrobeMap)) {</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        Set&lt;String&gt; prevNames = new HashSet&lt;&gt;();</b>
+<b class="fc">&nbsp;        Outfit previousOutfit = null;</b>
+&nbsp;
+<b class="fc">&nbsp;        for (int i = 0; i &lt; 7; i++) {</b>
+<b class="fc">&nbsp;            WeatherDay day = week.getWeatherDay(i);</b>
+<b class="fc">&nbsp;            if (day == null) {</b>
+&nbsp;                continue;
+&nbsp;            }
+<b class="fc">&nbsp;            Outfit outfit = generateOutfitWithNoRepeat(day, wardrobeMap, prevNames, previousOutfit);</b>
+<b class="fc">&nbsp;            day.setOutfit(outfit);</b>
+<b class="fc">&nbsp;            prevNames = extractNames(outfit);</b>
+<b class="fc">&nbsp;            previousOutfit = outfit;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean isWardrobeEmpty(Map&lt;String, List&lt;ClothingArticle&gt;&gt; wardrobeMap) {
+<b class="fc">&nbsp;        for (List&lt;ClothingArticle&gt; items : wardrobeMap.values()) {</b>
+<b class="pc">&nbsp;            if (items != null &amp;&amp; !items.isEmpty()) {</b>
+<b class="fc">&nbsp;                return false;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Outfit generateOutfitWithNoRepeat(WeatherDay day,
+&nbsp;                                              Map&lt;String, List&lt;ClothingArticle&gt;&gt; wardrobeMap,
+&nbsp;                                              Set&lt;String&gt; previousNames,
+&nbsp;                                              Outfit previousOutfit) {
+<b class="fc">&nbsp;        Outfit first = outfitCreator.createOutfitForDay(day, shuffledCopy(wardrobeMap), false);</b>
+<b class="fc">&nbsp;        if (first == null) return null;</b>
+<b class="pc">&nbsp;        if (!isSameTopOrBottom(first, previousNames) &amp;&amp; !isSameOutfit(first, previousOutfit)) {</b>
+<b class="fc">&nbsp;            return first;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        for (int attempt = 0; attempt &lt; 4; attempt++) {</b>
+<b class="fc">&nbsp;            Outfit candidate = outfitCreator.createOutfitForDay(day, shuffledCopy(wardrobeMap), false);</b>
+<b class="pc">&nbsp;            if (candidate != null &amp;&amp; !isSameTopOrBottom(candidate, previousNames)</b>
+<b class="pc">&nbsp;                    &amp;&amp; !isSameOutfit(candidate, previousOutfit)) {</b>
+<b class="fc">&nbsp;                return candidate;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        Map&lt;String, List&lt;ClothingArticle&gt;&gt; filtered = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (Map.Entry&lt;String, List&lt;ClothingArticle&gt;&gt; entry : wardrobeMap.entrySet()) {</b>
+<b class="fc">&nbsp;            List&lt;ClothingArticle&gt; list = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;            for (ClothingArticle item : entry.getValue()) {</b>
+<b class="pc">&nbsp;                if (item != null &amp;&amp; (previousNames == null || !previousNames.contains(item.getName()))) {</b>
+<b class="fc">&nbsp;                    list.add(item);</b>
+&nbsp;                }
+&nbsp;            }
+<b class="fc">&nbsp;            filtered.put(entry.getKey(), list);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        Outfit lastTry = outfitCreator.createOutfitForDay(day, filtered, false);</b>
+<b class="fc">&nbsp;        if (lastTry != null &amp;&amp; !isSameOutfit(lastTry, previousOutfit)) {</b>
+<b class="fc">&nbsp;            return lastTry;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return first;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Map&lt;String, List&lt;ClothingArticle&gt;&gt; shuffledCopy(Map&lt;String, List&lt;ClothingArticle&gt;&gt; original) {
+<b class="fc">&nbsp;        Map&lt;String, List&lt;ClothingArticle&gt;&gt; copy = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (Map.Entry&lt;String, List&lt;ClothingArticle&gt;&gt; entry : original.entrySet()) {</b>
+<b class="fc">&nbsp;            List&lt;ClothingArticle&gt; list = new ArrayList&lt;&gt;(entry.getValue());</b>
+<b class="fc">&nbsp;            Collections.shuffle(list);</b>
+<b class="fc">&nbsp;            copy.put(entry.getKey(), list);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return copy;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean isSameTopOrBottom(Outfit outfit, Set&lt;String&gt; previousNames) {
+<b class="fc">&nbsp;        if (outfit == null || previousNames == null) return false;</b>
+<b class="fc">&nbsp;        Map&lt;String, ClothingArticle&gt; items = outfit.getItems();</b>
+<b class="pc">&nbsp;        if (items == null) return false;</b>
+<b class="fc">&nbsp;        ClothingArticle top = items.get(&quot;top&quot;);</b>
+<b class="fc">&nbsp;        ClothingArticle bottom = items.get(&quot;bottom&quot;);</b>
+<b class="pc">&nbsp;        boolean sameTop = top != null &amp;&amp; top.getName() != null &amp;&amp; previousNames.contains(top.getName());</b>
+<b class="pc">&nbsp;        boolean sameBottom = bottom != null &amp;&amp; bottom.getName() != null &amp;&amp; previousNames.contains(bottom.getName());</b>
+<b class="fc">&nbsp;        return sameTop &amp;&amp; sameBottom;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Set&lt;String&gt; extractNames(Outfit outfit) {
+<b class="fc">&nbsp;        Set&lt;String&gt; names = new HashSet&lt;&gt;();</b>
+<b class="pc">&nbsp;        if (outfit == null || outfit.getItems() == null) return names;</b>
+<b class="fc">&nbsp;        for (ClothingArticle item : outfit.getItems().values()) {</b>
+<b class="fc">&nbsp;            if (item != null &amp;&amp; item.getName() != null) {</b>
+<b class="fc">&nbsp;                names.add(item.getName());</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return names;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns true if both outfits use the same named items for every slot.
+&nbsp;     * A null outfit never matches another outfit.
+&nbsp;     */
+&nbsp;    private boolean isSameOutfit(Outfit a, Outfit b) {
+<b class="pc">&nbsp;        if (a == null || b == null) {</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        Map&lt;String, ClothingArticle&gt; itemsA = a.getItems();</b>
+<b class="fc">&nbsp;        Map&lt;String, ClothingArticle&gt; itemsB = b.getItems();</b>
+<b class="pc">&nbsp;        if (itemsA == null || itemsB == null) {</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        if (!itemsA.keySet().equals(itemsB.keySet())) {</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        for (String key : itemsA.keySet()) {</b>
+<b class="fc">&nbsp;            ClothingArticle articleA = itemsA.get(key);</b>
+<b class="fc">&nbsp;            ClothingArticle articleB = itemsB.get(key);</b>
+<b class="pc">&nbsp;            String nameA = articleA != null ? articleA.getName() : null;</b>
+<b class="pc">&nbsp;            String nameB = articleB != null ? articleB.getName() : null;</b>
+<b class="fc">&nbsp;            if (!Objects.equals(nameA, nameB)) {</b>
+<b class="fc">&nbsp;                return false;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Map&lt;String, List&lt;ClothingArticle&gt;&gt; buildWardrobeMap(List&lt;ClothingArticle&gt; items) {
+<b class="fc">&nbsp;        Map&lt;String, List&lt;ClothingArticle&gt;&gt; map = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        map.put(&quot;top&quot;, new ArrayList&lt;&gt;());</b>
+<b class="fc">&nbsp;        map.put(&quot;bottom&quot;, new ArrayList&lt;&gt;());</b>
+<b class="fc">&nbsp;        map.put(&quot;outer&quot;, new ArrayList&lt;&gt;());</b>
+<b class="fc">&nbsp;        map.put(&quot;accessory&quot;, new ArrayList&lt;&gt;());</b>
+&nbsp;
+<b class="fc">&nbsp;        for (ClothingArticle item : items) {</b>
+<b class="fc">&nbsp;            if (item == null || item.getCategory() == null) continue;</b>
+<b class="fc">&nbsp;            String cat = item.getCategory().toLowerCase();</b>
+<b class="fc">&nbsp;            if (cat.contains(&quot;top&quot;)) {</b>
+<b class="fc">&nbsp;                map.get(&quot;top&quot;).add(item);</b>
+<b class="pc">&nbsp;            } else if (cat.contains(&quot;bottom&quot;) || cat.contains(&quot;pant&quot;) || cat.contains(&quot;bottoms&quot;)) {</b>
+<b class="fc">&nbsp;                map.get(&quot;bottom&quot;).add(item);</b>
+<b class="fc">&nbsp;            } else if (cat.contains(&quot;outer&quot;)) {</b>
+<b class="fc">&nbsp;                map.get(&quot;outer&quot;).add(item);</b>
+<b class="pc">&nbsp;            } else if (cat.contains(&quot;access&quot;)) {</b>
+<b class="fc">&nbsp;                map.get(&quot;accessory&quot;).add(item);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return map;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-01 19:29</div>
+</div>
+</body>
+</html>
