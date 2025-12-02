@@ -10,14 +10,17 @@ import fuze.usecases.managewardrobe.WardrobeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -172,7 +175,7 @@ class WeeklyPlannerInteractorTest {
         wardrobe.save(new ClothingArticle("Topper", "top", 1, false, placeholder));
         wardrobe.save(new ClothingArticle("Pants", "pant", 1, false, placeholder));
         WeeklyPlannerInteractor customInteractor = new WeeklyPlannerInteractor(
-                wardrobe, new SequenceOutfitCreator(List.of((Outfit) null)));
+                wardrobe, new SequenceOutfitCreator(Arrays.asList((Outfit) null)));
 
         WeatherDay[] days = buildDays(1);
         WeatherWeek week = new FakeWeatherWeek(days, "Null City");
@@ -231,6 +234,106 @@ class WeeklyPlannerInteractorTest {
         assertSame(repeat, days[1].getOutfit(), "When all retries fail, interactor reuses the first outfit");
     }
 
+    @Test
+    void privateHelpers_coverBranchyPaths() throws Exception {
+        WeeklyPlannerInteractor instance = new WeeklyPlannerInteractor(wardrobe, new OutfitCreator());
+
+        Map<String, List<ClothingArticle>> wardrobeMap = new HashMap<>();
+        wardrobeMap.put("top", List.of(new ClothingArticle("T", "top", 1, false, new Photo(""))));
+        wardrobeMap.put("bottom", new ArrayList<>());
+        wardrobeMap.put("outer", null);
+        wardrobeMap.put("accessory", new ArrayList<>());
+        boolean isEmpty = invokePrivate(instance, "isWardrobeEmpty",
+                new Class[]{Map.class}, wardrobeMap);
+        assertFalse(isEmpty, "Non-empty category should make wardrobe non-empty");
+
+        Set<String> prevNames = new HashSet<>(List.of("T", "B"));
+        Outfit repeat = buildOutfit("Repeat", new ClothingArticle("T", "top", 1, false, new Photo("")),
+                new ClothingArticle("B", "bottom", 1, false, new Photo("")));
+        boolean sameTopBottom = invokePrivate(instance, "isSameTopOrBottom",
+                new Class[]{Outfit.class, Set.class}, repeat, prevNames);
+        assertTrue(sameTopBottom, "Matching top and bottom should return true");
+
+        Set<String> extracted = invokePrivate(instance, "extractNames",
+                new Class[]{Outfit.class}, new Outfit(new HashMap<>() {{
+                    put("top", new ClothingArticle("T", "top", 1, false, new Photo("")));
+                    put("bottom", null);
+                    put("outer", new ClothingArticle(null, "outer", 1, false, new Photo("")));
+                }}, "Any", 0, false));
+        assertEquals(Set.of("T"), extracted, "Should ignore null articles or names");
+
+        Outfit outfitA = new Outfit(null, "A", 0, false);
+        Outfit outfitB = buildOutfit("B", new ClothingArticle("X", "top", 1, false, new Photo("")),
+                new ClothingArticle("Y", "bottom", 1, false, new Photo("")));
+        boolean sameOutfitNullItems = invokePrivate(instance, "isSameOutfit",
+                new Class[]{Outfit.class, Outfit.class}, outfitA, outfitB);
+        assertFalse(sameOutfitNullItems, "Null item maps should not be considered equal");
+
+        outfitA.setItems(new HashMap<>() {{
+            put("top", new ClothingArticle("X", "top", 1, false, new Photo("")));
+        }});
+        outfitB.setItems(new HashMap<>() {{
+            put("top", new ClothingArticle("X", "top", 1, false, new Photo("")));
+            put("bottom", new ClothingArticle("Y", "bottom", 1, false, new Photo("")));
+        }});
+        boolean sameOutfitMismatchedKeys = invokePrivate(instance, "isSameOutfit",
+                new Class[]{Outfit.class, Outfit.class}, outfitA, outfitB);
+        assertFalse(sameOutfitMismatchedKeys, "Different item keys should not match");
+
+        List<ClothingArticle> rawItems = List.of(
+                new ClothingArticle("TT", "Topper", 1, false, new Photo("")),
+                new ClothingArticle("BB", "pant", 1, false, new Photo("")),
+                new ClothingArticle("OO", "Outerwear", 1, false, new Photo("")),
+                new ClothingArticle("AA", "Accessory", 1, false, new Photo(""))
+        );
+        Map<String, List<ClothingArticle>> mapped = invokePrivate(instance, "buildWardrobeMap",
+                new Class[]{List.class}, rawItems);
+        assertEquals(1, mapped.get("top").size());
+        assertEquals(1, mapped.get("bottom").size());
+        assertEquals(1, mapped.get("outer").size());
+        assertEquals(1, mapped.get("accessory").size());
+
+        boolean sameOutfitPositive = invokePrivate(instance, "isSameOutfit",
+                new Class[]{Outfit.class, Outfit.class},
+                buildOutfit("One", new ClothingArticle("X", "top", 1, false, new Photo("")),
+                        new ClothingArticle("Y", "bottom", 1, false, new Photo(""))),
+                buildOutfit("Two", new ClothingArticle("X", "top", 1, false, new Photo("")),
+                        new ClothingArticle("Y", "bottom", 1, false, new Photo(""))));
+        assertTrue(sameOutfitPositive, "Identical items should be considered the same outfit");
+
+        boolean sameTopBottomNullPrev = invokePrivate(instance, "isSameTopOrBottom",
+                new Class[]{Outfit.class, Set.class},
+                buildOutfit("Repeat", new ClothingArticle("X", "top", 1, false, new Photo("")),
+                        new ClothingArticle("Y", "bottom", 1, false, new Photo(""))),
+                null);
+        assertFalse(sameTopBottomNullPrev, "Null previous set should not flag as repeat");
+
+        boolean wardrobeEmpty = invokePrivate(instance, "isWardrobeEmpty",
+                new Class[]{Map.class}, new HashMap<>() {{
+                    put("top", new ArrayList<>());
+                    put("bottom", new ArrayList<>());
+                    put("outer", new ArrayList<>());
+                    put("accessory", new ArrayList<>());
+                }});
+        assertTrue(wardrobeEmpty, "All empty lists should count as empty wardrobe");
+
+        boolean sameOutfitWithNull = invokePrivate(instance, "isSameOutfit",
+                new Class[]{Outfit.class, Outfit.class}, buildOutfit("One", null, null), null);
+        assertFalse(sameOutfitWithNull, "Null comparison should return false");
+
+        boolean sameTopBottomNullOutfit = invokePrivate(instance, "isSameTopOrBottom",
+                new Class[]{Outfit.class, Set.class}, null, new HashSet<>());
+        assertFalse(sameTopBottomNullOutfit, "Null outfit should not cause repeat");
+
+        Map<String, List<ClothingArticle>> mappedWithNulls = invokePrivate(instance, "buildWardrobeMap",
+                new Class[]{List.class}, Arrays.asList(
+                        new ClothingArticle("TT", "Top", 1, false, new Photo("")),
+                        null,
+                        new ClothingArticle("??", null, 1, false, new Photo(""))
+                ));
+        assertEquals(1, mappedWithNulls.get("top").size(), "Null items/categories should be skipped");
+    }
+
     private void addBasicWardrobe() {
         Photo placeholder = new Photo("");
         wardrobe.save(new ClothingArticle("TopOne", "top", 2, false, placeholder));
@@ -258,6 +361,14 @@ class WeeklyPlannerInteractorTest {
         return new Outfit(items, title, 0, false);
     }
 
+    @SuppressWarnings("unchecked")
+    private <T> T invokePrivate(WeeklyPlannerInteractor instance, String name,
+                                Class<?>[] paramTypes, Object... args) throws Exception {
+        Method m = WeeklyPlannerInteractor.class.getDeclaredMethod(name, paramTypes);
+        m.setAccessible(true);
+        return (T) m.invoke(instance, args);
+    }
+
     private static class FakeWardrobeRepository implements WardrobeRepository {
         private final List<ClothingArticle> items = new ArrayList<>();
 
@@ -283,16 +394,20 @@ class WeeklyPlannerInteractorTest {
     }
 
     private static class SequenceOutfitCreator extends OutfitCreator {
-        private final Queue<Outfit> queue;
+        private final List<Outfit> queue;
+        private int index = 0;
 
         SequenceOutfitCreator(List<Outfit> outfits) {
-            this.queue = new ArrayDeque<>(outfits);
+            this.queue = outfits != null ? new ArrayList<>(outfits) : new ArrayList<>();
         }
 
         @Override
         public Outfit createOutfitForDay(WeatherDay day, Map<String, List<ClothingArticle>> wardrobe,
                                          boolean isRainingOverride) {
-            return queue.isEmpty() ? null : queue.poll();
+            if (index >= queue.size()) {
+                return null;
+            }
+            return queue.get(index++);
         }
     }
 
