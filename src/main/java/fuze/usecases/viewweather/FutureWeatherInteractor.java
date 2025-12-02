@@ -9,16 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FutureWeatherInteractor {
-    /**
-     * Creates a list for the weather throughout the next two weeks.
-     * @param city is a string representation of the location (default Toronto)
-     * @return A list of WeatherDay's
-     */
-    public List<WeatherDay> getTwoweeksWeather(final String city) {
-        LocationStringToCoordinate converter =
-                new LocationStringToCoordinate(city);
+
+    public List<WeatherDay> getTwoweeksWeather(String city) {
+
+        // 1. default -> Toronto
+        if (city == null || city.isBlank()) {
+            city = "Toronto Canada";
+        }
+
+        // 2. convert city name -> coordinates
+        LocationStringToCoordinate converter = new LocationStringToCoordinate(city);
         double lon = converter.getLongitude();
         double lat = converter.getLatitude();
+
+        // 3. Query 14-day data
         int days = 14;
         WeatherFetcher fetcher = new WeatherFetcher(
                 java.time.LocalDate.now().toString(),
@@ -26,6 +30,7 @@ public class FutureWeatherInteractor {
                 lon,
                 lat
         );
+
         JSONArray dateArray = fetcher.getForecastDates();
         List<WeatherDay> list = new ArrayList<>();
 
