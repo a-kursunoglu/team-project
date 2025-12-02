@@ -15,34 +15,49 @@ import java.util.Map;
  * - honors rain preference when possible (chooses waterproof items if rain)
  * - tries to match temperature using clothing weatherRating as a warmth score
  * Assumptions:
- * - wardrobe is provided as Map with keys: "top", "bottom", "outer", "accessory"
+ * - wardrobe is provided as Map with keys: "top", "bottom", "outer",
+ * "accessory"
  * - clothing weatherRating is an integer warmth score (higher = warmer)
- * - the WeatherDay weather string contains "rain" (case-insensitive) if it's raining,
+ * - the WeatherDay weather string contains "rain" (case-insensitive) if it's
+ * raining,
  *   or you can pass a boolean flag via isRaining argument.
  */
 public class OutfitCreator {
-
-    public Outfit createOutfitForDay(WeatherDay day,
-                                     Map<String, List<ClothingArticle>> wardrobe,
-                                     boolean isRainingOverride) {
+    /**
+     * Creates a new outfit based on the conditions that day.
+     * @param day see WeatherDay class
+     * @param wardrobe see Wardrobe class
+     * @param isRainingOverride boolean, whether it is raining
+     * @return an Outfit entity that best matches the weather on that day
+     */
+    public Outfit createOutfitForDay(final WeatherDay day,
+                                     Map<String, List<ClothingArticle>>
+                                             wardrobe,
+                                     final boolean isRainingOverride) {
         if (wardrobe == null) {
             throw new IllegalArgumentException("Wardrobe cannot be null");
         }
 
-        boolean isRaining = isRainingOverride || (day != null && isRainyString(day.getWeather()));
-        double averageTemperature = day != null ? averageTemp(day) : 15.0;
+        boolean isRaining = isRainingOverride
+                || (day != null && isRainyString(day.getWeather()));
+        double defaultTemperature = 15.0;
+        double averageTemperature = day != null ? averageTemp(day)
+                : defaultTemperature;
 
         /*
          * Clothing warmth rating is 0–5 (0 = lightest, 5 = warmest).
-         * We map the day's average temperature (C) to this 0–5 target using simple buckets.
-         * Colder temps map to higher warmth ratings (layer up).
+         * We map the day's average temperature (C) to this 0–5 target
+         * using simple buckets. Colder temps map to higher warmth ratings
+         * (layer up).
          */
         int targetWarmth = day != null
                 ? tempToWarmthRating(averageTemp(day))
                 : 2; // neutral fallback
 
-        ClothingArticle top = chooseBest(wardrobe.get("top"), targetWarmth, isRaining);
-        ClothingArticle bottom = chooseBest(wardrobe.get("bottom"), targetWarmth, isRaining);
+        ClothingArticle top = chooseBest(wardrobe.get("top"), targetWarmth,
+                isRaining);
+        ClothingArticle bottom = chooseBest(wardrobe.get("bottom"),
+                targetWarmth, isRaining);
 
         if (top == null || bottom == null) {
             // Cannot build a valid outfit without these
@@ -54,17 +69,21 @@ public class OutfitCreator {
         boolean needsRainLayer = isRaining;
 
         ClothingArticle outer = null;
-        if ((needsWarmthLayer || needsRainLayer) && wardrobe.get("outer") != null) {
-            outer = chooseOptional(wardrobe.get("outer"), targetWarmth, isRaining);
+        if ((needsWarmthLayer || needsRainLayer)
+                && wardrobe.get("outer") != null) {
+            outer = chooseOptional(wardrobe.get("outer"),
+                    targetWarmth, isRaining);
             if (outer == null && needsRainLayer) {
                 outer = chooseBestWaterproof(wardrobe.get("outer"));
             }
         }
 
-        boolean includeAccessory = targetWarmth >= 4 || averageTemperature <= 8 || isRaining;
+        boolean includeAccessory = targetWarmth >= 4
+                || averageTemperature <= 8 || isRaining;
         ClothingArticle accessory = null;
         if (includeAccessory && wardrobe.get("accessory") != null) {
-            accessory = chooseOptional(wardrobe.get("accessory"), targetWarmth, isRaining);
+            accessory = chooseOptional(wardrobe.get("accessory"), targetWarmth,
+                    isRaining);
         }
 
         Map<String, ClothingArticle> items = new HashMap<>();
@@ -78,23 +97,29 @@ public class OutfitCreator {
         }
 
         String title = buildTitle(day, isRaining);
-        boolean waterproof = isRaining && (hasWaterproof(top) || hasWaterproof(bottom)
+        boolean waterproof = isRaining && (hasWaterproof(top)
+                || hasWaterproof(bottom)
                 || hasWaterproof(outer) || hasWaterproof(accessory));
-        int combinedWarmth = baseWarmth + (outer != null ? outer.getWeatherRating() : 0);
+        int combinedWarmth = baseWarmth
+                + (outer != null ? outer.getWeatherRating() : 0);
 
         return new Outfit(items, title, combinedWarmth, waterproof);
     }
 
-    private ClothingArticle chooseBest(List<ClothingArticle> options, int targetWarmth, boolean preferWaterproof) {
+    private ClothingArticle chooseBest(final List<ClothingArticle> options,
+                                       final int targetWarmth,
+                                       final boolean preferWaterproof) {
         if (options == null || options.isEmpty()) {
             return null;
         }
         ClothingArticle best = null;
         int bestScore = Integer.MAX_VALUE;
         for (ClothingArticle article : options) {
-            if (article == null) continue;
+            if (article == null) {
+                continue;
+            }
             if (preferWaterproof && article.isWaterproof()) {
-                // lift waterproof items when it's raining
+                // don't restrict waterproof items when it's raining
                 int score = Math.abs(article.getWeatherRating() - targetWarmth);
                 if (score <= bestScore) {
                     best = article;
@@ -111,7 +136,9 @@ public class OutfitCreator {
         // if we preferred waterproof but none exist, fallback to closest warmth
         if (best == null && preferWaterproof) {
             for (ClothingArticle article : options) {
-                if (article == null) continue;
+                if (article == null) {
+                    continue;
+                }
                 int score = Math.abs(article.getWeatherRating() - targetWarmth);
                 if (score < bestScore) {
                     best = article;
@@ -122,8 +149,11 @@ public class OutfitCreator {
         return best;
     }
 
-    private ClothingArticle chooseOptional(List<ClothingArticle> options, int targetWarmth, boolean preferWaterproof) {
-        ClothingArticle candidate = chooseBest(options, targetWarmth, preferWaterproof);
+    private ClothingArticle chooseOptional(final List<ClothingArticle> options,
+                                           final int targetWarmth,
+                                           final boolean preferWaterproof) {
+        ClothingArticle candidate = chooseBest(options, targetWarmth,
+                preferWaterproof);
         if (candidate == null) {
             return null;
         }
@@ -132,8 +162,11 @@ public class OutfitCreator {
     }
 
 
-    private ClothingArticle chooseBestWaterproof(List<ClothingArticle> options) {
-        if (options == null) return null;
+    private ClothingArticle chooseBestWaterproof(
+            final List<ClothingArticle> options) {
+        if (options == null) {
+            return null;
+        }
         for (ClothingArticle article : options) {
             if (article != null && article.isWaterproof()) {
                 return article;
@@ -145,39 +178,53 @@ public class OutfitCreator {
     /**
      * Map temperature (C) to a 0-5 warmth rating bucket.
      * 5 = very cold, 0 = hot.
+     * @param tempC celsius representation of temperature
+     * @return gives back the int temperature rating
      */
     private int tempToWarmthRating(double tempC) {
-        if (tempC <= -5) return 5;
-        if (tempC <= 2) return 4;
-        if (tempC <= 9) return 3;
-        if (tempC <= 16) return 2;
-        if (tempC <= 23) return 1;
+        if (tempC <= -5) {
+            return 5;
+        }
+        if (tempC <= 2) {
+            return 4;
+        }
+        if (tempC <= 9) {
+            return 3;
+        }
+        if (tempC <= 16) {
+            return 2;
+        }
+        if (tempC <= 23) {
+            return 1;
+        }
         return 0;
     }
 
-    private boolean isRainyString(String weather) {
+    private boolean isRainyString(final String weather) {
         return weather != null && weather.toLowerCase().contains("rain");
     }
 
-    private boolean hasWaterproof(ClothingArticle article) {
+    private boolean hasWaterproof(final ClothingArticle article) {
         return article != null && article.isWaterproof();
     }
 
-    private String buildTitle(WeatherDay day, boolean isRaining) {
+    private String buildTitle(final WeatherDay day, final boolean isRaining) {
         String date = day != null ? day.getDate() : "Unknown date";
         String location = formatLocation(day);
-        return String.format("%s outfit for %s%s", location, date, isRaining ? " (rain)" : "");
+        return String.format("%s outfit for %s%s", location, date,
+                isRaining ? " (rain)" : "");
     }
 
-    private String formatLocation(WeatherDay day) {
-        if (day == null || day.getLocation() == null || day.getLocation().length < 2) {
+    private String formatLocation(final WeatherDay day) {
+        if (day == null || day.getLocation() == null
+                || day.getLocation().length < 2) {
             return "Unknown location";
         }
         double[] loc = day.getLocation();
         return String.format("%.4f, %.4f", loc[0], loc[1]);
     }
 
-    private double averageTemp(WeatherDay day) {
+    private double averageTemp(final WeatherDay day) {
         return (day.getTemperatureHigh() + day.getTemperatureLow()) / 2.0;
     }
 }
