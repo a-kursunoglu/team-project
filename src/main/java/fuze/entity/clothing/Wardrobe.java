@@ -19,7 +19,8 @@ public class Wardrobe {
     }
 
     public boolean deleteItemByName(String name){
-        return items.removeIf(i -> i.getName().equalsIgnoreCase(name));
+        return items.removeIf(i ->
+                i.getName().equalsIgnoreCase(name));
     }
 
     public List<ClothingArticle> getByCategory(String category){
