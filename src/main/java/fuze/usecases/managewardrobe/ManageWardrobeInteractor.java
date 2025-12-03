@@ -24,6 +24,7 @@ public class ManageWardrobeInteractor {
     }
 
     public List<ClothingArticle> viewWardrobe() {
+
         return repository.getAll();
     }
 

@@ -43,9 +43,12 @@ public class WardrobePanel extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        JLabel label = new JLabel(categoryName);
-        label.setFont(new Font("Arial", Font.BOLD, 16));
-        label.setHorizontalAlignment(SwingConstants.CENTER);
+        JButton toggleButton = new JButton(categoryName + " ▼");
+        toggleButton.setFont(new Font("Arial", Font.BOLD, 16));
+        toggleButton.setFocusPainted(false);
+        toggleButton.setContentAreaFilled(false);
+        toggleButton.setBorderPainted(false);
+        toggleButton.setHorizontalAlignment(SwingConstants.CENTER);
 
         JPanel grid = new JPanel();
         grid.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -57,8 +60,23 @@ public class WardrobePanel extends JPanel {
             grid.add(tile);
         }
 
-        panel.add(label, BorderLayout.NORTH);
-        panel.add(grid, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(grid);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.add(scrollPane, BorderLayout.CENTER);
+
+        panel.add(toggleButton, BorderLayout.NORTH);
+        panel.add(contentPanel, BorderLayout.CENTER);
+
+        toggleButton.addActionListener(e -> {
+            boolean visible = contentPanel.isVisible();
+            contentPanel.setVisible(!visible);
+            toggleButton.setText(categoryName + (visible ? " ▶" : " ▼"));
+            panel.revalidate();
+            panel.repaint();
+        });
 
         return panel;
     }
