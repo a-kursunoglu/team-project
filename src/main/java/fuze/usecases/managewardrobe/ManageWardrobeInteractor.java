@@ -42,6 +42,7 @@ public class ManageWardrobeInteractor {
      * @return Returns a list of all clothing articles
      */
     public List<ClothingArticle> viewWardrobe() {
+
         return repository.getAll();
     }
 
