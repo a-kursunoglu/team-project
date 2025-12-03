@@ -135,7 +135,7 @@ public class UploadClothingInteractorTest {
         interactor.execute(input);
 
         assertTrue(presenter.failCalled);
-        assertEquals("Warmth level must be non-negative.", presenter.errorMessage);
+        assertEquals("Warmth level must be 0-5.", presenter.errorMessage);
     }
 
     @Test
@@ -143,7 +143,7 @@ public class UploadClothingInteractorTest {
         UploadClothingInputData input = new UploadClothingInputData(
                 "Coat",
                 "OUTER",
-                4,
+                6,
                 false,
                 "coat.jpg"
         );
@@ -151,7 +151,7 @@ public class UploadClothingInteractorTest {
         interactor.execute(input);
 
         assertTrue(presenter.failCalled);
-        assertEquals("Warmth level must be non-negative.", presenter.errorMessage);
+        assertEquals("Warmth level must be 0-5.", presenter.errorMessage);
     }
 
     @Test
