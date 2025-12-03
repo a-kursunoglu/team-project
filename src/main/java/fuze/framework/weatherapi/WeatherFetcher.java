@@ -8,14 +8,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * A class to give another layer between the weather entities and the API handling,
- * This also allows us to make fewer API calls by consolidating them into one call
- * over a range of days.
+ * A class to give another layer between the weather entities and the API
+ * handling, This also allows us to make fewer API calls by consolidating
+ * them into one call over a range of days.
  */
 public class WeatherFetcher {
     /**
-     * @param startDate is of form "yyyy-mm-dd" (same as throughout this project)
-     * @param forecastDays is an int representing the number of days to predict out to
+     * @param startDate is of form "yyyy-mm-dd" (same as throughout
+     *                  this project)
+     * @param forecastDays is an int representing the number of
+     *                     days to predict out to
      * @param longitude is a double and so is
      * @param latitude which will sometimes be stored in double[] form
      */
@@ -26,7 +28,9 @@ public class WeatherFetcher {
     private String startDate;
     private JSONObject weatherData;
 
-
+    /**
+     * Creates an instance of WeatherFetcher with default settings.
+     */
     public WeatherFetcher() {
         // This is the default that will run for WeatherWeek
         // 7 forecast days by default (6 cuz starts at zero)
@@ -40,7 +44,12 @@ public class WeatherFetcher {
         loadWeeklyForecast();
     }
 
-    public WeatherFetcher(double longitude, double latitude) {
+    /**
+     * Creates instance but for specified location.
+     * @param longitude lon double
+     * @param latitude lat double
+     */
+    public WeatherFetcher(final double longitude, final double latitude) {
         // This is the default that will run for WeatherWeek
         // 7 forecast days by default (6 cuz starts at zero)
         this.forecastDays = 6;
@@ -53,20 +62,17 @@ public class WeatherFetcher {
         loadWeeklyForecast();
     }
 
-    public WeatherFetcher(String startDate, int forecastDays) {
-        // No use for this unless someone needs to implement it
-        this.longitude = -79.38;
-        this.latitude = 43.65;
-        this.startDate = startDate;
-        this.forecastDays = forecastDays;
-        this.weatherData = new JSONObject();
-        this.isDataLoaded = false;
-        loadWeeklyForecast();
-    }
-
-    public WeatherFetcher(String startDate, int forecastDays, double longitude, double latitude) {
-        // This one requires all the parameters, it's really only used when instancing
-        // WeatherTrip
+    /**
+     * Combines all of the above.
+     * @param startDate see above
+     * @param forecastDays see above
+     * @param longitude see above
+     * @param latitude see above
+     */
+    public WeatherFetcher(final String startDate, final int forecastDays,
+                          final double longitude, final double latitude) {
+        // This one requires all the parameters, it's really only used
+        // when instancing WeatherTrip
         this.longitude = longitude;
         this.latitude = latitude;
         this.forecastDays = forecastDays;
@@ -76,14 +82,10 @@ public class WeatherFetcher {
         loadWeeklyForecast();
     }
 
-    public JSONObject getWeatherData() {
-        return weatherData;
-    }
-
-    public boolean isDataLoaded() {
-        return isDataLoaded;
-    }
-
+    /**
+     * Returns actual JSON array
+     * @return JSONArray
+     */
     public JSONArray getForecastDates() {
         if (weatherData == null) {
             return new JSONArray();
@@ -97,15 +99,15 @@ public class WeatherFetcher {
     }
 
     /**
-     * This loads a whole week instead of making a bunch of calls, it is important
-     * to have the isLoaded bool because otherwise the data hasn't been properly
-     * called.
+     * This loads a whole week instead of making a bunch of calls, it is
+     * important to have the isLoaded bool because otherwise the data hasn't
+     * been properly called.
      */
     private void loadWeeklyForecast() {
-        // TODO: handle the errors like wrong location or no weather data
-        try{
+        try {
             APIReader apiReader = new APIReader();
-            JSONObject data = apiReader.readAPI(this.longitude, this.latitude, this.startDate, this.forecastDays);
+            JSONObject data = apiReader.readAPI(this.longitude,
+                    this.latitude, this.startDate, this.forecastDays);
             if (data != null) {
                 this.weatherData = data;
                 this.isDataLoaded = true;
@@ -113,8 +115,7 @@ public class WeatherFetcher {
                 this.isDataLoaded = false;
                 this.weatherData = new JSONObject();
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error while loading weather data");
             this.isDataLoaded = false;
             this.weatherData = new JSONObject();
@@ -128,37 +129,38 @@ public class WeatherFetcher {
      * @param date again in "yyyy-mm-dd"
      * @return a WeatherDay entity for the given day
      */
-    public WeatherDay getWeatherByDate(String date) {
-    if (!isDataLoaded || weatherData == null || !weatherData.has("daily")) {
-        return null;
-    }
-    //Please refer to WeatherDay
-    int i = 0;
-    JSONObject daily = weatherData.getJSONObject("daily");
-    JSONArray time = daily.optJSONArray("time");
-    if (time == null) {
-        return null;
-    }
-    while (i < time.length() && i <= this.forecastDays) {
-        String day = time.optString(i, "");
-        if (day.equals(date)) {
-            JSONArray codes = daily.optJSONArray("weather_code");
-            JSONArray highs = daily.optJSONArray("temperature_2m_max");
-            JSONArray lows = daily.optJSONArray("temperature_2m_min");
-            if (codes == null || highs == null || lows == null) {
-                return null;
-            }
-            int weatherCondition = codes.optInt(i);
-            double longitude = weatherData.optDouble("longitude");
-            double latitude = weatherData.optDouble("latitude");
-            double tempHigh = highs.optDouble(i);
-            double tempLow = lows.optDouble(i);
-            double[] location = new double[]{longitude, latitude};
-            WeatherDay weatherDay = new WeatherDay(weatherCondition, tempHigh, tempLow, location, date);
-            return weatherDay;
+    public WeatherDay getWeatherByDate(final String date) {
+        if (!isDataLoaded || weatherData == null || !weatherData.has("daily")) {
+            return null;
         }
-        i++;
+        //Please refer to WeatherDay
+        int i = 0;
+        JSONObject daily = weatherData.getJSONObject("daily");
+        JSONArray time = daily.optJSONArray("time");
+        if (time == null) {
+            return null;
+        }
+        while (i < time.length() && i <= this.forecastDays) {
+            String day = time.optString(i, "");
+            if (day.equals(date)) {
+                JSONArray codes = daily.optJSONArray("weather_code");
+                JSONArray highs = daily.optJSONArray("temperature_2m_max");
+                JSONArray lows = daily.optJSONArray("temperature_2m_min");
+                if (codes == null || highs == null || lows == null) {
+                    return null;
+                }
+                int weatherCondition = codes.optInt(i);
+                double longitude = weatherData.optDouble("longitude");
+                double latitude = weatherData.optDouble("latitude");
+                double tempHigh = highs.optDouble(i);
+                double tempLow = lows.optDouble(i);
+                double[] location = new double[]{longitude, latitude};
+                WeatherDay weatherDay = new WeatherDay(weatherCondition, tempHigh,
+                        tempLow, location, date);
+                return weatherDay;
+            }
+            i++;
+        }
+        return null;
     }
-    return null;
-}
 }
