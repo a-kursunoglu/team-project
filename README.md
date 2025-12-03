@@ -8,6 +8,14 @@ current location and make suggestions on what you should wear given the weather 
 The application lets you upload pictures of your entire wardrobe and will help YOU
 figure out the most stylish solutions that are appropriate for your week!
 
+## Installation:
+
+To run the program, simply execute the main file located in main-java-fuze-app-Main
+
+If you have any questions feel free to create an issue on our github page!
+
+https://github.com/a-kursunoglu/team-project
+
 ## Usage:
 ### Uploading Clothing:
 - Use your file directory to upload a .jpg image
@@ -23,12 +31,23 @@ warm the article of clothing is.
 - Our weather is sourced from the free to use API provided by:
   - Source: https://open-meteo.com/en/docs
 
-
+  
 ## In the Works:
 
 ### Unfinished Tasks:
 Last updated: _**11/29/2025**_  ---Update after changes---
 
-- [ ] Add testing cases for entities (check to see if required)
-- [ ] Polish up code before submission
+- COMPLETED
+
+
+## Contributors:
+**Nate An**
+
+**Isabell Wang**
+
+**Ates Kursunoglu**
+
+**Yeyun Chang**
+
+**Jaden Al-Aidroos**
 
